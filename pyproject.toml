@@ -1,0 +1,22 @@
+[project]
+name = "dx-sol-suggest"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Kou-Yamaguchi", email = "kou.tuos.infetc72@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "dotenv>=0.9.9",
+    "langchain>=1.3.17",
+    "langchain-openai>=1.6.0",
+    "streamlit>=1.62.0",
+]
+
+[project.scripts]
+dx-sol-suggest = "dx_sol_suggest:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
