@@ -15,10 +15,8 @@ from prompts import EVALUATION_CRITERIA
 load_dotenv()
 
 
-def call_agent(user_input: dict) -> str:
-    llm = ChatOpenAI(model="gpt-4o-mini")
-
-    prompt = f"""
+def build_prompt(user_input: dict) -> str:
+    return f"""
     あなたはDXコンサルタントです。
     
     業界/業種:
@@ -39,8 +37,10 @@ def call_agent(user_input: dict) -> str:
     DX提案を出力してください
     """
 
-    response = llm.invoke(prompt)
 
+def call_agent(user_input: dict) -> str:
+    llm = ChatOpenAI(model="gpt-4o-mini")
+    response = llm.invoke(build_prompt(user_input))
     return response.content
 
 
@@ -60,18 +60,23 @@ if __name__ == "__main__":
     all_results = []
 
     for test_case in test_cases[:5]:
+        question = build_prompt(test_case)
         answer = call_agent(test_case)
 
         eval_dataset = Dataset.from_dict(
             {
-                "user_input": [json.dumps(test_case, ensure_ascii=False)],
+                "user_input": [question],
                 "response": [answer],
             }
         )
 
         result = evaluate(eval_dataset, metrics=metrics)
 
-        row = {"id": test_case["case_id"]}
+        row = {
+            "id": test_case["case_id"],
+            "user_input": question,
+            "response": answer,
+        }
 
         for metric_name in EVALUATION_CRITERIA:
             row[metric_name] = float(result[metric_name][0])
@@ -91,4 +96,6 @@ if __name__ == "__main__":
     with open("outputs/results.json", "w", encoding="utf-8") as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
 
-    print(df)
+    score_columns = ["id", *EVALUATION_CRITERIA.keys(), "average"]
+    print(df[score_columns])
+    print(f"\nSaved {len(all_results)} results to outputs/results.csv and outputs/results.json")
