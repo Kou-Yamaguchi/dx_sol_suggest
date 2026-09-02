@@ -16,7 +16,7 @@ def current_time_in_tokyo() -> str:
 
 def make_agent():
     model = ChatOpenAI(
-        model=os.getenv("OPENAI_MODEL", "gpt-5.4"),
+        model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
         temperature=0,
     )
 

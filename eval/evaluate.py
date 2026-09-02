@@ -11,6 +11,7 @@ from ragas.metrics import RubricsScore
 from ragas.llms import llm_factory
 
 from prompts import EVALUATION_CRITERIA
+from dx_sol_suggest.core.pipeline import make_agent
 
 load_dotenv()
 
@@ -39,9 +40,11 @@ def build_prompt(user_input: dict) -> str:
 
 
 def call_agent(user_input: dict) -> str:
-    llm = ChatOpenAI(model="gpt-4o-mini")
-    response = llm.invoke(build_prompt(user_input))
-    return response.content
+    agent = make_agent()
+    response = agent.invoke(
+        {"messages": [{"role": "user", "content": build_prompt(user_input)}]}
+    )
+    return str(response["messages"][-1].content)
 
 
 if __name__ == "__main__":
@@ -98,4 +101,6 @@ if __name__ == "__main__":
 
     score_columns = ["id", *EVALUATION_CRITERIA.keys(), "average"]
     print(df[score_columns])
-    print(f"\nSaved {len(all_results)} results to outputs/results.csv and outputs/results.json")
+    print(
+        f"\nSaved {len(all_results)} results to outputs/results.csv and outputs/results.json"
+    )
