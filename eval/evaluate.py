@@ -5,8 +5,10 @@ import pandas as pd
 from dotenv import load_dotenv
 from datasets import Dataset
 from langchain_openai import ChatOpenAI
+from openai import AsyncOpenAI
 from ragas import evaluate
 from ragas.metrics import AspectCritic
+from ragas.llms import llm_factory
 
 from prompts import EVALUATION_CRITERIA
 
@@ -14,13 +16,13 @@ load_dotenv()
 
 
 def call_agent(user_input: dict) -> str:
-    llm = ChatOpenAI(model="gpt-4o")
+    llm = ChatOpenAI(model="gpt-4o-mini")
 
     prompt = f"""
     あなたはDXコンサルタントです。
     
-    業界:
-    {user_input["industry"]}
+    業界/業種:
+    {user_input["department"]}
     
     状況:
     {user_input["situation"]}
@@ -30,9 +32,6 @@ def call_agent(user_input: dict) -> str:
     
     業務量:
     {user_input["workload"]}
-    
-    予算:
-    {user_input["budget"]}
     
     制約:
     {user_input["constraints"]}
@@ -49,7 +48,9 @@ if __name__ == "__main__":
     with open("eval/case.json", encoding="utf-8") as f:
         test_cases = json.load(f)
 
-    judge_llm = ChatOpenAI(model="gpt-4o")
+    client = AsyncOpenAI(api_key=os.getenv("OPEN_API_KEY"))
+
+    judge_llm = llm_factory("gpt-4o", client=client)
 
     metrics = []
 
@@ -75,7 +76,7 @@ if __name__ == "__main__":
         row = {"id": test_case["case_id"]}
 
         for metric_name in EVALUATION_CRITERIA:
-            row[metric_name] = float(result[metric_name])
+            row[metric_name] = float(result[metric_name][0])
 
         row["average"] = sum(row[m] for m in EVALUATION_CRITERIA) / len(
             EVALUATION_CRITERIA
@@ -90,6 +91,6 @@ if __name__ == "__main__":
     df.to_csv("outputs/results.csv", index=False, encoding="utf-8-sig")
 
     with open("outputs/results.json", "w", encoding="utf-8") as f:
-        json.dump(all_results, ensure_ascii=False, indent=2)
+        json.dump(all_results, f, ensure_ascii=False, indent=2)
 
     print(df)
