@@ -1,4 +1,4 @@
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 COPY --from=ghcr.io/astral-sh/uv:0.12.6 /uv /uvx /bin/
 
@@ -16,6 +16,7 @@ RUN uv sync --locked --no-dev --no-install-project
 # アプリ本体を追加する
 COPY README.md ./
 COPY src ./src
+COPY eval ./eval
 RUN uv sync --locked --no-dev
 
 EXPOSE 8501
