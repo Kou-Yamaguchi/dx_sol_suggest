@@ -61,36 +61,43 @@ if __name__ == "__main__":
         metrics.append(RubricsScore(name=key, rubrics=item["rubrics"], llm=judge_llm))
 
     all_results = []
+    errors = 0
 
-    for test_case in test_cases[:5]:
-        question = build_prompt(test_case)
-        answer = call_agent(test_case)
+    for test_case in test_cases[:2]:
+        try:
+            question = build_prompt(test_case)
+            answer = call_agent(test_case)
 
-        eval_dataset = Dataset.from_dict(
-            {
-                "user_input": [question],
-                "response": [answer],
+            eval_dataset = Dataset.from_dict(
+                {
+                    "user_input": [question],
+                    "response": [answer],
+                }
+            )
+
+            result = evaluate(eval_dataset, metrics=metrics)
+
+            row = {
+                "id": test_case["case_id"],
+                "user_input": question,
+                "response": answer,
             }
-        )
 
-        result = evaluate(eval_dataset, metrics=metrics)
+            for metric_name in EVALUATION_CRITERIA:
+                row[metric_name] = float(result[metric_name][0])
 
-        row = {
-            "id": test_case["case_id"],
-            "user_input": question,
-            "response": answer,
-        }
+            row["average"] = sum(row[m] for m in EVALUATION_CRITERIA) / len(
+                EVALUATION_CRITERIA
+            )
 
-        for metric_name in EVALUATION_CRITERIA:
-            row[metric_name] = float(result[metric_name][0])
-
-        row["average"] = sum(row[m] for m in EVALUATION_CRITERIA) / len(
-            EVALUATION_CRITERIA
-        )
-
-        all_results.append(row)
+            all_results.append(row)
+        except Exception as e:
+            errors += 1
+            print(f"ERROR {e}")
 
     df = pd.DataFrame(all_results)
+    num_summary = {"n": len(df), "errors": errors}
+    metrics_summary = df.drop(["id", "user_input", "response"], axis=1).mean().to_dict()
 
     os.makedirs("outputs", exist_ok=True)
 
@@ -98,6 +105,9 @@ if __name__ == "__main__":
 
     with open("outputs/results.json", "w", encoding="utf-8") as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
+
+    with open("outputs/summary.json", "w", encoding="utf-8") as f:
+        json.dump(num_summary | metrics_summary, f, ensure_ascii=False, indent=2)
 
     score_columns = ["id", *EVALUATION_CRITERIA.keys(), "average"]
     print(df[score_columns])
