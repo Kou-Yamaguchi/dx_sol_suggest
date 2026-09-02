@@ -1,0 +1,95 @@
+import json
+import os
+
+import pandas as pd
+from dotenv import load_dotenv
+from datasets import Dataset
+from langchain_openai import ChatOpenAI
+from ragas import evaluate
+from ragas.metrics import AspectCritic
+
+from prompts import EVALUATION_CRITERIA
+
+load_dotenv()
+
+
+def call_agent(user_input: dict) -> str:
+    llm = ChatOpenAI(model="gpt-4o")
+
+    prompt = f"""
+    あなたはDXコンサルタントです。
+    
+    業界:
+    {user_input["industry"]}
+    
+    状況:
+    {user_input["situation"]}
+    
+    課題:
+    {user_input["problems"]}
+    
+    業務量:
+    {user_input["workload"]}
+    
+    予算:
+    {user_input["budget"]}
+    
+    制約:
+    {user_input["constraints"]}
+    
+    DX提案を出力してください
+    """
+
+    response = llm.invoke(prompt)
+
+    return response.content
+
+
+if __name__ == "__main__":
+    with open("eval/case.json", encoding="utf-8") as f:
+        test_cases = json.load(f)
+
+    judge_llm = ChatOpenAI(model="gpt-4o")
+
+    metrics = []
+
+    for key, item in EVALUATION_CRITERIA.items():
+        metrics.append(
+            AspectCritic(name=key, definition=item["definition"], llm=judge_llm)
+        )
+
+    all_results = []
+
+    for test_case in test_cases[:5]:
+        answer = call_agent(test_case)
+
+        eval_dataset = Dataset.from_dict(
+            {
+                "user_input": [json.dumps(test_case, ensure_ascii=False)],
+                "response": [answer],
+            }
+        )
+
+        result = evaluate(eval_dataset, metrics=metrics)
+
+        row = {"id": test_case["case_id"]}
+
+        for metric_name in EVALUATION_CRITERIA:
+            row[metric_name] = float(result[metric_name])
+
+        row["average"] = sum(row[m] for m in EVALUATION_CRITERIA) / len(
+            EVALUATION_CRITERIA
+        )
+
+        all_results.append(row)
+
+    df = pd.DataFrame(all_results)
+
+    os.makedirs("outputs", exist_ok=True)
+
+    df.to_csv("outputs/results.csv", index=False, encoding="utf-8-sig")
+
+    with open("outputs/results.json", "w", encoding="utf-8") as f:
+        json.dump(all_results, ensure_ascii=False, indent=2)
+
+    print(df)
