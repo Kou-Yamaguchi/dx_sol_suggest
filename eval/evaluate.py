@@ -7,7 +7,7 @@ from datasets import Dataset
 from langchain_openai import ChatOpenAI
 from openai import AsyncOpenAI
 from ragas import evaluate
-from ragas.metrics import AspectCritic
+from ragas.metrics import RubricsScore
 from ragas.llms import llm_factory
 
 from prompts import EVALUATION_CRITERIA
@@ -55,9 +55,7 @@ if __name__ == "__main__":
     metrics = []
 
     for key, item in EVALUATION_CRITERIA.items():
-        metrics.append(
-            AspectCritic(name=key, definition=item["definition"], llm=judge_llm)
-        )
+        metrics.append(RubricsScore(name=key, rubrics=item["rubrics"], llm=judge_llm))
 
     all_results = []
 
