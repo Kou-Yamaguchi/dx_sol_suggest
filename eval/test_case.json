@@ -29,7 +29,93 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
+    "case_specific_checks": {
+      "expected_elements": [
+        "LLMを活用したテキストからの構造化データ抽出の提案",
+        "既存システム連携におけるAPIまたはRPAの活用",
+        "段階的な導入（PoC）の提案"
+      ],
+      "forbidden_or_risky_elements": [
+        "既存システムを完全リプレイスするような予算オーバーの提案",
+        "オンプレミスのセキュリティ要件を無視したパブリッククラウド連携"
+      ]
+    }
+  },
+  {
+    "case_id": "sales_002_omit_constraints_nl",
+    "base_case_id": "sales_002",
+    "input_mode": "natural_language",
+    "user_message": "営業では、全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。\n課題は次の通りです。記述フォーマットが統一されておらず、定量的なデータ抽出が困難、管理職の確認作業に膨大な時間がかかっている、顧客の解約予兆などの重要なシグナルが見落とされがち\n業務量は 300、1人あたり1日1件、20分 です。\nDXの提案をお願いします。",
+    "facts": {
+      "department": "営業",
+      "situation": "全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。",
+      "problems": [
+        "記述フォーマットが統一されておらず、定量的なデータ抽出が困難",
+        "管理職の確認作業に膨大な時間がかかっている",
+        "顧客の解約予兆などの重要なシグナルが見落とされがち"
+      ],
+      "workload": {
+        "people": 300,
+        "frequency": "1人あたり1日1件",
+        "time_per_task": "20分"
+      },
+      "constraints": [
+        "初期予算500万円以下",
+        "既存の日報システム（オンプレミス）と連携する必要がある",
+        "半年以内に本稼働させたい"
+      ],
+      "expected_outcomes": [
+        "管理職の確認時間の削減",
+        "重要案件の自動ピックアップ",
+        "日報入力業務の効率化"
+      ]
+    },
+    "omitted_from_input": ["constraints"],
+    "expected_behavior": "ask_or_assume",
+    "case_specific_checks": {
+      "expected_elements": [
+        "LLMを活用したテキストからの構造化データ抽出の提案",
+        "既存システム連携におけるAPIまたはRPAの活用",
+        "段階的な導入（PoC）の提案"
+      ],
+      "forbidden_or_risky_elements": [
+        "既存システムを完全リプレイスするような予算オーバーの提案",
+        "オンプレミスのセキュリティ要件を無視したパブリッククラウド連携"
+      ]
+    }
+  },
+  {
+    "case_id": "sales_002_omit_workload_nl",
+    "base_case_id": "sales_002",
+    "input_mode": "natural_language",
+    "user_message": "営業では、全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。\n課題は次の通りです。記述フォーマットが統一されておらず、定量的なデータ抽出が困難、管理職の確認作業に膨大な時間がかかっている、顧客の解約予兆などの重要なシグナルが見落とされがち\n制約は初期予算500万円以下、既存の日報システム（オンプレミス）と連携する必要がある、半年以内に本稼働させたいです。\nDXの提案をお願いします。",
+    "facts": {
+      "department": "営業",
+      "situation": "全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。",
+      "problems": [
+        "記述フォーマットが統一されておらず、定量的なデータ抽出が困難",
+        "管理職の確認作業に膨大な時間がかかっている",
+        "顧客の解約予兆などの重要なシグナルが見落とされがち"
+      ],
+      "workload": {
+        "people": 300,
+        "frequency": "1人あたり1日1件",
+        "time_per_task": "20分"
+      },
+      "constraints": [
+        "初期予算500万円以下",
+        "既存の日報システム（オンプレミス）と連携する必要がある",
+        "半年以内に本稼働させたい"
+      ],
+      "expected_outcomes": [
+        "管理職の確認時間の削減",
+        "重要案件の自動ピックアップ",
+        "日報入力業務の効率化"
+      ]
+    },
+    "omitted_from_input": ["workload"],
+    "expected_behavior": "refuse_overconfident_roi",
     "case_specific_checks": {
       "expected_elements": [
         "LLMを活用したテキストからの構造化データ抽出の提案",
@@ -69,7 +155,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "生成AIではなく、iPaaS(Zapier等)やRPAなどのルールベースの自動化を提案する",
@@ -108,7 +194,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "RAG（検索拡張生成）や社内専用のベクトル検索の導入提案",
@@ -147,7 +233,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "AIによるバイアス（性別・年齢・学歴など）のリスクを指摘する",
@@ -186,7 +272,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "数理最適化ソルバーや専用のシフト管理SaaSの導入を提案する",
@@ -225,7 +311,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "社内規定ドキュメントをソースとしたFAQチャットボット（RAG）の提案",
@@ -264,7 +350,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "AIは不要であり、既存の経費精算システムのワークフロー機能や簡単なマクロでIF条件を設定する提案"
@@ -301,7 +387,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "AI-OCRの導入提案",
@@ -341,7 +427,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "リーガルテック特化型のAIソリューション（LegalForce等）の活用提案",
@@ -380,7 +466,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "AIチャットボットではなく、SSO（シングルサインオン）の導入やセルフサービス式のパスワードリセットツールの導入（プロセス改善）を提案する"
@@ -417,7 +503,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "自然言語処理によるメール内容の自動分類とルーティングの提案",
@@ -456,7 +542,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "高速な検索エンジンとRAGを組み合わせたオペレーター支援AIの提案",
@@ -495,7 +581,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "画像認識AI（コンピュータビジョン）の導入提案",
@@ -533,7 +619,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "バーコードスキャナ、ハンディターミナル、またはRFIDタグの導入によるデジタル化の提案（AI不要）"
@@ -570,7 +656,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "組合せ最適化技術（数理計画ソルバー）を活用した動的配車システムの提案"
@@ -607,7 +693,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "DeepL Proや法人向けChatGPT（データ学習オプトアウト設定済）の導入提案",
@@ -645,7 +731,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "AIではなく、Wordの「スタイル」機能や社内統一テンプレートの配布・運用徹底というプロセス改善の提案"
@@ -682,7 +768,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "間取り図に特化した画像認識AI（AI-OCR/CAD変換）の導入提案",
@@ -720,7 +806,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "機械学習を用いた需要予測モデルの構築提案",
@@ -758,7 +844,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "LLMで日報を要約するのではなく、日報制度そのものを廃止する、または定量データのみの入力へ変更する（BPR）提案"
@@ -795,7 +881,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "生成AI（LLM）によるプロンプトエンジニアリングを活用したコピー生成の提案",
@@ -833,7 +919,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "自然言語処理（感情分析API等）を用いたソーシャルリスニング自動化の提案",
@@ -871,7 +957,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "静的コード解析ツール（SonarQube等）やセキュアなAIコーディング支援（GitHub Copilot Enterprise等）の導入提案",
@@ -909,7 +995,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "いきなりツールを導入せず、業務棚卸し（アセスメント）やプロセスマイニングを実施する提案",
@@ -948,7 +1034,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "過去の相談履歴をベクトル化したRAG（検索拡張生成）チャットボットの提案",
@@ -986,7 +1072,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "医療分野に特化したLLMや、信頼できるデータベースのみを参照するRAGの構築",
@@ -1024,7 +1110,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "音声解析AI・議事録AIによる通話内容のテキスト化と、LLMによる感情分析・リスクスコアリングの提案"
@@ -1061,7 +1147,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "システム投資をせず、全社に「領収書撮影のガイドライン（背景を黒にする等）」を周知する、または手書き入力を義務付けるルールの見直し提案"
@@ -1098,7 +1184,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "音声認識/合成AIを利用したボイスピッキングシステム、またはスマートグラス（AR）の導入提案",
@@ -1136,7 +1222,7 @@
       ]
     },
     "omitted_from_input": [],
-    "expected_behavior": "",
+    "expected_behavior": "suggest",
     "case_specific_checks": {
       "expected_elements": [
         "WebスクレイピングツールやRPA、Webサイト変更検知ツールの導入提案",
