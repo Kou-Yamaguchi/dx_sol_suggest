@@ -1,28 +1,35 @@
 [
   {
-    "case_id": "sales_002",
-    "department": "営業",
-    "situation": "全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。",
-    "problems": [
-      "記述フォーマットが統一されておらず、定量的なデータ抽出が困難",
-      "管理職の確認作業に膨大な時間がかかっている",
-      "顧客の解約予兆などの重要なシグナルが見落とされがち"
-    ],
-    "workload": {
-      "people": 300,
-      "frequency": "1人あたり1日1件",
-      "time_per_task": "20分"
+    "case_id": "sales_002_omit_constraints_nl",
+    "base_case_id": "sales_002",
+    "input_mode": "structured",
+    "user_message": "全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。",
+    "facts": {
+      "department": "営業",
+      "situation": "全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。",
+      "problems": [
+        "記述フォーマットが統一されておらず、定量的なデータ抽出が困難",
+        "管理職の確認作業に膨大な時間がかかっている",
+        "顧客の解約予兆などの重要なシグナルが見落とされがち"
+      ],
+      "workload": {
+        "people": 300,
+        "frequency": "1人あたり1日1件",
+        "time_per_task": "20分"
+      },
+      "constraints": [
+        "初期予算500万円以下",
+        "既存の日報システム（オンプレミス）と連携する必要がある",
+        "半年以内に本稼働させたい"
+      ],
+      "expected_outcomes": [
+        "管理職の確認時間の削減",
+        "重要案件の自動ピックアップ",
+        "日報入力業務の効率化"
+      ]
     },
-    "constraints": [
-      "初期予算500万円以下",
-      "既存の日報システム（オンプレミス）と連携する必要がある",
-      "半年以内に本稼働させたい"
-    ],
-    "expected_outcomes": [
-      "管理職の確認時間の削減",
-      "重要案件の自動ピックアップ",
-      "日報入力業務の効率化"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "generate a solution that is not too expensive and can be implemented in 6 months.",
     "case_specific_checks": {
       "expected_elements": [
         "LLMを活用したテキストからの構造化データ抽出の提案",
