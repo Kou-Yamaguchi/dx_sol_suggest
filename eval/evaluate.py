@@ -7,11 +7,11 @@ from datasets import Dataset
 from langchain_openai import ChatOpenAI
 from openai import AsyncOpenAI
 from ragas import evaluate
-from ragas.metrics import RubricsScore
+from ragas.metrics import AspectCritic, RubricsScore
 from ragas.llms import llm_factory
 
 from enums import parse_case_enums
-from prompts import EVALUATION_CRITERIA
+from prompts import EVALUATION_CRITERIA, build_proper_behavior_definition
 from dx_sol_suggest.core.pipeline import make_agent
 
 load_dotenv()
@@ -54,15 +54,16 @@ if __name__ == "__main__":
 
     judge_llm = llm_factory("gpt-4o", client=client)
 
-    metrics = []
-
-    for key, item in EVALUATION_CRITERIA.items():
-        metrics.append(RubricsScore(name=key, rubrics=item["rubrics"], llm=judge_llm))
+    # 全ケース共通の観点は、ループの外で一度だけ構築する
+    common_metrics = [
+        RubricsScore(name=key, rubrics=item["rubrics"], llm=judge_llm)
+        for key, item in EVALUATION_CRITERIA.items()
+    ]
 
     all_results = []
     errors = 0
 
-    for test_case in test_cases[:5]:
+    for test_case in test_cases[:4]:
         try:
             answer = call_agent(test_case["user_message"])
 
@@ -73,7 +74,17 @@ if __name__ == "__main__":
                 }
             )
 
-            result = evaluate(eval_dataset, metrics=metrics)
+            # description がケースごとに異なる観点は、ここで都度構築する
+            case_metrics = [
+                *common_metrics,
+                AspectCritic(
+                    name="proper_behavior",
+                    definition=build_proper_behavior_definition(test_case),
+                    llm=judge_llm,
+                ),
+            ]
+
+            result = evaluate(eval_dataset, metrics=case_metrics)
 
             row = {
                 "id": test_case["case_id"],
@@ -83,6 +94,8 @@ if __name__ == "__main__":
 
             for metric_name in EVALUATION_CRITERIA:
                 row[metric_name] = float(result[metric_name][0])
+
+            row["proper_behavior"] = float(result["proper_behavior"][0])
 
             row["average"] = sum(row[m] for m in EVALUATION_CRITERIA) / len(
                 EVALUATION_CRITERIA
@@ -107,7 +120,7 @@ if __name__ == "__main__":
     with open("outputs/summary_base.json", "w", encoding="utf-8") as f:
         json.dump(num_summary | metrics_summary, f, ensure_ascii=False, indent=2)
 
-    score_columns = ["id", *EVALUATION_CRITERIA.keys(), "average"]
+    score_columns = ["id", *EVALUATION_CRITERIA.keys(), "proper_behavior", "average"]
     print(df[score_columns])
     print(
         f"\nSaved {len(all_results)} results to outputs/results.csv and outputs/results.json"

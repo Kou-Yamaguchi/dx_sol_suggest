@@ -1,3 +1,5 @@
+from enums import EXPECTED_BEHAVIOR_SPECS
+
 EVALUATION_CRITERIA = {
     "problem_alignment": {
         "name": "課題整合性",
@@ -79,3 +81,36 @@ EVALUATION_CRITERIA = {
         },
     },
 }
+
+
+def build_proper_behavior_definition(test_case: dict) -> str:
+    """ケース固有の expected_behavior / case_specific_checks を definition に埋め込む。"""
+    behavior = test_case["expected_behavior"]
+    spec = EXPECTED_BEHAVIOR_SPECS[behavior]
+    omitted = test_case.get("omitted_from_input") or []
+    checks = test_case.get("case_specific_checks") or {}
+
+    omitted_text = ", ".join(omitted) if omitted else "なし（全項目が入力されている）"
+    expected_elements = checks.get("expected_elements") or []
+    forbidden_elements = checks.get("forbidden_or_risky_elements") or []
+
+    expected_text = "\n".join(f"- {item}" for item in expected_elements) or "- （なし）"
+    forbidden_text = (
+        "\n".join(f"- {item}" for item in forbidden_elements) or "- （なし）"
+    )
+
+    return f"""
+情報の提供量に合わせて適切な行動をとっているか評価してください。
+Yes (1) は条件を満たす場合、No (0) は満たさない場合です。
+
+期待される振る舞い: {behavior}（{spec}）
+入力から欠けている項目: {omitted_text}
+
+満たすべき要素:
+{expected_text}
+
+含めてはいけない / リスクのある要素:
+{forbidden_text}
+
+期待される振る舞いをとり、満たすべき要素を含み、禁止・リスク要素を含まない場合のみ Yes としてください。
+""".strip()
