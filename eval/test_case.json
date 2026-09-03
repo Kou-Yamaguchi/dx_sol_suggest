@@ -76,7 +76,8 @@
     "expected_behavior": "ask_or_assume",
     "case_specific_checks": {
       "expected_elements": [
-        "欠けている制約を確認している, または仮定として明示している"
+        "欠けている制約を確認している, または仮定として明示している",
+        "制約が本当に存在しないかユーザーに確認を促している"
       ],
       "forbidden_or_risky_elements": [
         "既存システムを完全リプレイスするような予算オーバーの提案",
@@ -117,7 +118,8 @@
     "expected_behavior": "refuse_overconfident_roi",
     "case_specific_checks": {
       "expected_elements": [
-        "欠けている業務量を確認している、または業務量が不明な前提で効果・ROIを断定していない"
+        "欠けている業務量を確認している、または業務量が不明な前提で効果・ROIを断定していない",
+        "ROIを算出するため業務量を定量的に把握する必要性について言及している"
       ],
       "forbidden_or_risky_elements": [
         "既存システムを完全リプレイスするような予算オーバーの提案",
