@@ -10,10 +10,34 @@ from ragas import evaluate
 from ragas.metrics import RubricsScore
 from ragas.llms import llm_factory
 
+from enums import parse_case_enums
 from prompts import EVALUATION_CRITERIA
 from dx_sol_suggest.core.pipeline import make_agent
 
 load_dotenv()
+
+
+def build_structured_prompt(user_input: dict) -> str:
+    return f"""
+    あなたはDXコンサルタントです。
+    
+    業界/業種:
+    {user_input["department"]}
+    
+    状況:
+    {user_input["situation"]}
+    
+    課題:
+    {user_input["problems"]}
+    
+    業務量:
+    {user_input["workload"]}
+    
+    制約:
+    {user_input["constraints"]}
+    
+    DX提案を出力してください
+    """
 
 
 def call_agent(content: str) -> str:
@@ -24,7 +48,7 @@ def call_agent(content: str) -> str:
 
 if __name__ == "__main__":
     with open("eval/test_case.json", encoding="utf-8") as f:
-        test_cases = json.load(f)
+        test_cases = [parse_case_enums(case) for case in json.load(f)]
 
     client = AsyncOpenAI(api_key=os.getenv("OPEN_API_KEY"))
 
