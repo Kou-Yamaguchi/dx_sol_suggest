@@ -1,6 +1,6 @@
 [
   {
-    "case_id": "sales_002_omit_constraints_nl",
+    "case_id": "sales_002",
     "base_case_id": "sales_002",
     "input_mode": "structured",
     "user_message": "全国の営業担当者300名が、日々の訪問記録をテキスト形式で日報システムに自由記述している。管理職はそれを全て読んで案件状況を把握しようとしている。",
@@ -44,25 +44,32 @@
   },
   {
     "case_id": "sales_003_no_ai",
-    "department": "営業",
-    "situation": "インサイドセールス10名が、Webサイトからの資料請求メールを手作業で開封し、顧客名と連絡先をCRMにコピペしている。",
-    "problems": [
-      "単純な転記作業に時間がかかっている",
-      "コピペ時の入力ミスが発生している"
-    ],
-    "workload": {
-      "people": 10,
-      "frequency": "1人あたり1日30件",
-      "time_per_task": "3分"
+    "base_case_id": "sales_003_no_ai",
+    "input_mode": "structured",
+    "user_message": "インサイドセールス10名が、Webサイトからの資料請求メールを手作業で開封し、顧客名と連絡先をCRMにコピペしている。",
+    "facts": {
+      "department": "営業",
+      "situation": "インサイドセールス10名が、Webサイトからの資料請求メールを手作業で開封し、顧客名と連絡先をCRMにコピペしている。",
+      "problems": [
+        "単純な転記作業に時間がかかっている",
+        "コピペ時の入力ミスが発生している"
+      ],
+      "workload": {
+        "people": 10,
+        "frequency": "1人あたり1日30件",
+        "time_per_task": "3分"
+      },
+      "constraints": [
+        "予算50万円以下",
+        "1ヶ月以内に解決したい"
+      ],
+      "expected_outcomes": [
+        "転記作業のゼロ化",
+        "入力ミスの撲滅"
+      ]
     },
-    "constraints": [
-      "予算50万円以下",
-      "1ヶ月以内に解決したい"
-    ],
-    "expected_outcomes": [
-      "転記作業のゼロ化",
-      "入力ミスの撲滅"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "生成AIではなく、iPaaS(Zapier等)やRPAなどのルールベースの自動化を提案する",
@@ -76,25 +83,32 @@
   },
   {
     "case_id": "sales_004",
-    "department": "営業",
-    "situation": "営業担当30名が、顧客に提出する見積書を作成する際、毎回過去の類似案件をファイルサーバーから検索して参考にしている。",
-    "problems": [
-      "過去の案件を探すのに時間がかかる",
-      "担当者の経験によって検索スキルに差があり、見積り精度が属人化している"
-    ],
-    "workload": {
-      "people": 30,
-      "frequency": "1人あたり1日2件",
-      "time_per_task": "30分"
+    "base_case_id": "sales_004",
+    "input_mode": "structured",
+    "user_message": "営業担当30名が、顧客に提出する見積書を作成する際、毎回過去の類似案件をファイルサーバーから検索して参考にしている。",
+    "facts": {
+      "department": "営業",
+      "situation": "営業担当30名が、顧客に提出する見積書を作成する際、毎回過去の類似案件をファイルサーバーから検索して参考にしている。",
+      "problems": [
+        "過去の案件を探すのに時間がかかる",
+        "担当者の経験によって検索スキルに差があり、見積り精度が属人化している"
+      ],
+      "workload": {
+        "people": 30,
+        "frequency": "1人あたり1日2件",
+        "time_per_task": "30分"
+      },
+      "constraints": [
+        "予算300万円以下",
+        "社外秘の原価情報が含まれるため、外部AIへの直接送信不可"
+      ],
+      "expected_outcomes": [
+        "過去案件の検索時間短縮",
+        "見積り業務の属人化解消"
+      ]
     },
-    "constraints": [
-      "予算300万円以下",
-      "社外秘の原価情報が含まれるため、外部AIへの直接送信不可"
-    ],
-    "expected_outcomes": [
-      "過去案件の検索時間短縮",
-      "見積り業務の属人化解消"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "RAG（検索拡張生成）や社内専用のベクトル検索の導入提案",
@@ -108,25 +122,32 @@
   },
   {
     "case_id": "hr_002_bias_risk",
-    "department": "人事",
-    "situation": "新卒採用において、5名の人事担当者が年間5,000枚の履歴書とエントリーシートを目視で確認し、一次選考を行っている。",
-    "problems": [
-      "選考に膨大な時間がかかり、他業務が圧迫されている",
-      "担当者によって評価のブレが発生している"
-    ],
-    "workload": {
-      "people": 5,
-      "frequency": "年間5,000件",
-      "time_per_task": "10分"
+    "base_case_id": "hr_002_bias_risk",
+    "input_mode": "structured",
+    "user_message": "新卒採用において、5名の人事担当者が年間5,000枚の履歴書とエントリーシートを目視で確認し、一次選考を行っている。",
+    "facts": {
+      "department": "人事",
+      "situation": "新卒採用において、5名の人事担当者が年間5,000枚の履歴書とエントリーシートを目視で確認し、一次選考を行っている。",
+      "problems": [
+        "選考に膨大な時間がかかり、他業務が圧迫されている",
+        "担当者によって評価のブレが発生している"
+      ],
+      "workload": {
+        "people": 5,
+        "frequency": "年間5,000件",
+        "time_per_task": "10分"
+      },
+      "constraints": [
+        "予算1,000万円",
+        "選考の公平性と透明性を担保する必要がある"
+      ],
+      "expected_outcomes": [
+        "書類選考の工数削減",
+        "評価基準の統一"
+      ]
     },
-    "constraints": [
-      "予算1,000万円",
-      "選考の公平性と透明性を担保する必要がある"
-    ],
-    "expected_outcomes": [
-      "書類選考の工数削減",
-      "評価基準の統一"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "AIによるバイアス（性別・年齢・学歴など）のリスクを指摘する",
@@ -140,25 +161,32 @@
   },
   {
     "case_id": "hr_003_no_ai",
-    "department": "人事",
-    "situation": "毎月末、人事担当者がアルバイト従業員100名分のシフト希望をLINEで受け取り、Excelのパズルでシフト表を作成している。",
-    "problems": [
-      "希望の重複や労働基準法のチェックに時間がかかる",
-      "特定の人事担当者しかシフトを作成できない"
-    ],
-    "workload": {
-      "people": 1,
-      "frequency": "月1回",
-      "time_per_task": "24時間(3営業日)"
+    "base_case_id": "hr_003_no_ai",
+    "input_mode": "structured",
+    "user_message": "毎月末、人事担当者がアルバイト従業員100名分のシフト希望をLINEで受け取り、Excelのパズルでシフト表を作成している。",
+    "facts": {
+      "department": "人事",
+      "situation": "毎月末、人事担当者がアルバイト従業員100名分のシフト希望をLINEで受け取り、Excelのパズルでシフト表を作成している。",
+      "problems": [
+        "希望の重複や労働基準法のチェックに時間がかかる",
+        "特定の人事担当者しかシフトを作成できない"
+      ],
+      "workload": {
+        "people": 1,
+        "frequency": "月1回",
+        "time_per_task": "24時間(3営業日)"
+      },
+      "constraints": [
+        "予算50万円以下",
+        "労働時間の上限や必須配置人数のルールを厳密に守る必要がある"
+      ],
+      "expected_outcomes": [
+        "シフト作成時間の短縮",
+        "属人化の解消"
+      ]
     },
-    "constraints": [
-      "予算50万円以下",
-      "労働時間の上限や必須配置人数のルールを厳密に守る必要がある"
-    ],
-    "expected_outcomes": [
-      "シフト作成時間の短縮",
-      "属人化の解消"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "数理最適化ソルバーや専用のシフト管理SaaSの導入を提案する",
@@ -171,26 +199,33 @@
   },
   {
     "case_id": "hr_004",
-    "department": "人事",
-    "situation": "新入社員（年間100名）から、就業規則や福利厚生に関する同じような質問が人事担当者へSlackのDMで大量に寄せられる。",
-    "problems": [
-      "都度回答するため人事の時間が奪われる",
-      "新入社員側も回答を待つ時間が発生する"
-    ],
-    "workload": {
-      "people": 3,
-      "frequency": "1日合計30件",
-      "time_per_task": "10分"
+    "base_case_id": "hr_004",
+    "input_mode": "structured",
+    "user_message": "新入社員（年間100名）から、就業規則や福利厚生に関する同じような質問が人事担当者へSlackのDMで大量に寄せられる。",
+    "facts": {
+      "department": "人事",
+      "situation": "新入社員（年間100名）から、就業規則や福利厚生に関する同じような質問が人事担当者へSlackのDMで大量に寄せられる。",
+      "problems": [
+        "都度回答するため人事の時間が奪われる",
+        "新入社員側も回答を待つ時間が発生する"
+      ],
+      "workload": {
+        "people": 3,
+        "frequency": "1日合計30件",
+        "time_per_task": "10分"
+      },
+      "constraints": [
+        "予算150万円",
+        "Slackと連携できること",
+        "規程類の改定に容易に追従できること"
+      ],
+      "expected_outcomes": [
+        "問い合わせ対応時間の削減",
+        "自己解決率の向上"
+      ]
     },
-    "constraints": [
-      "予算150万円",
-      "Slackと連携できること",
-      "規程類の改定に容易に追従できること"
-    ],
-    "expected_outcomes": [
-      "問い合わせ対応時間の削減",
-      "自己解決率の向上"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "社内規定ドキュメントをソースとしたFAQチャットボット（RAG）の提案",
@@ -204,25 +239,32 @@
   },
   {
     "case_id": "acc_003_no_ai",
-    "department": "経理",
-    "situation": "従業員が出張交通費を申請する際、タクシー代が深夜割増の時間帯（22時以降）かつ5000円以上の場合のみ、事前承認が必要なルールだが、経理が目視でチェックしている。",
-    "problems": [
-      "ルールの見落としが発生する",
-      "確認作業が月末に集中する"
-    ],
-    "workload": {
-      "people": 3,
-      "frequency": "1日合計200件",
-      "time_per_task": "1分"
+    "base_case_id": "acc_003_no_ai",
+    "input_mode": "structured",
+    "user_message": "従業員が出張交通費を申請する際、タクシー代が深夜割増の時間帯（22時以降）かつ5000円以上の場合のみ、事前承認が必要なルールだが、経理が目視でチェックしている。",
+    "facts": {
+      "department": "経理",
+      "situation": "従業員が出張交通費を申請する際、タクシー代が深夜割増の時間帯（22時以降）かつ5000円以上の場合のみ、事前承認が必要なルールだが、経理が目視でチェックしている。",
+      "problems": [
+        "ルールの見落としが発生する",
+        "確認作業が月末に集中する"
+      ],
+      "workload": {
+        "people": 3,
+        "frequency": "1日合計200件",
+        "time_per_task": "1分"
+      },
+      "constraints": [
+        "予算20万円",
+        "早急に解決したい"
+      ],
+      "expected_outcomes": [
+        "目視チェックの自動化",
+        "ルール違反の自動差し戻し"
+      ]
     },
-    "constraints": [
-      "予算20万円",
-      "早急に解決したい"
-    ],
-    "expected_outcomes": [
-      "目視チェックの自動化",
-      "ルール違反の自動差し戻し"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "AIは不要であり、既存の経費精算システムのワークフロー機能や簡単なマクロでIF条件を設定する提案"
@@ -234,25 +276,32 @@
   },
   {
     "case_id": "acc_004",
-    "department": "経理",
-    "situation": "各部署から送られてくるPDFの請求書（フォーマットは取引先ごとにバラバラ）を見ながら、経理担当が会計システムに手入力している。",
-    "problems": [
-      "入力ミスによる支払い間違いのリスク",
-      "月末月初に担当者が残業過多になる"
-    ],
-    "workload": {
-      "people": 10,
-      "frequency": "月間3,000件",
-      "time_per_task": "5分"
+    "base_case_id": "acc_004",
+    "input_mode": "structured",
+    "user_message": "各部署から送られてくるPDFの請求書（フォーマットは取引先ごとにバラバラ）を見ながら、経理担当が会計システムに手入力している。",
+    "facts": {
+      "department": "経理",
+      "situation": "各部署から送られてくるPDFの請求書（フォーマットは取引先ごとにバラバラ）を見ながら、経理担当が会計システムに手入力している。",
+      "problems": [
+        "入力ミスによる支払い間違いのリスク",
+        "月末月初に担当者が残業過多になる"
+      ],
+      "workload": {
+        "people": 10,
+        "frequency": "月間3,000件",
+        "time_per_task": "5分"
+      },
+      "constraints": [
+        "予算500万円以下",
+        "最終的なデータの正確性は100%が求められる"
+      ],
+      "expected_outcomes": [
+        "入力作業の自動化",
+        "残業時間の削減"
+      ]
     },
-    "constraints": [
-      "予算500万円以下",
-      "最終的なデータの正確性は100%が求められる"
-    ],
-    "expected_outcomes": [
-      "入力作業の自動化",
-      "残業時間の削減"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "AI-OCRの導入提案",
@@ -266,26 +315,33 @@
   },
   {
     "case_id": "acc_005",
-    "department": "経理・法務",
-    "situation": "新規取引先との契約時、相手方から提示されたNDA（秘密保持契約書）と自社の標準雛形を比較し、不利な条項がないか法務経理担当が1行ずつ読み合わせている。",
-    "problems": [
-      "確認に高度な専門知識と時間がかかる",
-      "見落としによる法的リスクがある"
-    ],
-    "workload": {
-      "people": 2,
-      "frequency": "週に10件",
-      "time_per_task": "60分"
+    "base_case_id": "acc_005",
+    "input_mode": "structured",
+    "user_message": "新規取引先との契約時、相手方から提示されたNDA（秘密保持契約書）と自社の標準雛形を比較し、不利な条項がないか法務経理担当が1行ずつ読み合わせている。",
+    "facts": {
+      "department": "経理・法務",
+      "situation": "新規取引先との契約時、相手方から提示されたNDA（秘密保持契約書）と自社の標準雛形を比較し、不利な条項がないか法務経理担当が1行ずつ読み合わせている。",
+      "problems": [
+        "確認に高度な専門知識と時間がかかる",
+        "見落としによる法的リスクがある"
+      ],
+      "workload": {
+        "people": 2,
+        "frequency": "週に10件",
+        "time_per_task": "60分"
+      },
+      "constraints": [
+        "予算1,000万円",
+        "極めて機密性の高い情報を含む",
+        "ハルシネーション（嘘の指摘）は許されない"
+      ],
+      "expected_outcomes": [
+        "リーガルチェックの迅速化",
+        "リスク条項の見落とし防止"
+      ]
     },
-    "constraints": [
-      "予算1,000万円",
-      "極めて機密性の高い情報を含む",
-      "ハルシネーション（嘘の指摘）は許されない"
-    ],
-    "expected_outcomes": [
-      "リーガルチェックの迅速化",
-      "リスク条項の見落とし防止"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "リーガルテック特化型のAIソリューション（LegalForce等）の活用提案",
@@ -299,25 +355,32 @@
   },
   {
     "case_id": "hd_002_no_ai",
-    "department": "ヘルプデスク",
-    "situation": "社内システムにログインできなくなった社員から、「パスワードを忘れたのでリセットしてほしい」という電話が情シスに毎日大量にくる。",
-    "problems": [
-      "パスワードリセットという単純作業で電話回線と担当者の時間が塞がれる",
-      "本人確認に手間がかかる"
-    ],
-    "workload": {
-      "people": 5,
-      "frequency": "1日合計50件",
-      "time_per_task": "5分"
+    "base_case_id": "hd_002_no_ai",
+    "input_mode": "structured",
+    "user_message": "社内システムにログインできなくなった社員から、「パスワードを忘れたのでリセットしてほしい」という電話が情シスに毎日大量にくる。",
+    "facts": {
+      "department": "ヘルプデスク",
+      "situation": "社内システムにログインできなくなった社員から、「パスワードを忘れたのでリセットしてほしい」という電話が情シスに毎日大量にくる。",
+      "problems": [
+        "パスワードリセットという単純作業で電話回線と担当者の時間が塞がれる",
+        "本人確認に手間がかかる"
+      ],
+      "workload": {
+        "people": 5,
+        "frequency": "1日合計50件",
+        "time_per_task": "5分"
+      },
+      "constraints": [
+        "予算200万円",
+        "セキュリティレベルを下げることはできない"
+      ],
+      "expected_outcomes": [
+        "電話問い合わせ数の半減",
+        "情シスの工数削減"
+      ]
     },
-    "constraints": [
-      "予算200万円",
-      "セキュリティレベルを下げることはできない"
-    ],
-    "expected_outcomes": [
-      "電話問い合わせ数の半減",
-      "情シスの工数削減"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "AIチャットボットではなく、SSO（シングルサインオン）の導入やセルフサービス式のパスワードリセットツールの導入（プロセス改善）を提案する"
@@ -329,25 +392,32 @@
   },
   {
     "case_id": "hd_003",
-    "department": "ヘルプデスク",
-    "situation": "顧客からの問い合わせメールが1つの代表アドレスに届き、管理者が内容を読んで10種類の専門チーム（ハードウェア、ソフトウェア、契約等）に手動で振り分けている。",
-    "problems": [
-      "振り分けの遅れが顧客への一次回答の遅れに直結している",
-      "管理者が不在だと業務が滞る"
-    ],
-    "workload": {
-      "people": 1,
-      "frequency": "1日300件",
-      "time_per_task": "1分"
+    "base_case_id": "hd_003",
+    "input_mode": "structured",
+    "user_message": "顧客からの問い合わせメールが1つの代表アドレスに届き、管理者が内容を読んで10種類の専門チーム（ハードウェア、ソフトウェア、契約等）に手動で振り分けている。",
+    "facts": {
+      "department": "ヘルプデスク",
+      "situation": "顧客からの問い合わせメールが1つの代表アドレスに届き、管理者が内容を読んで10種類の専門チーム（ハードウェア、ソフトウェア、契約等）に手動で振り分けている。",
+      "problems": [
+        "振り分けの遅れが顧客への一次回答の遅れに直結している",
+        "管理者が不在だと業務が滞る"
+      ],
+      "workload": {
+        "people": 1,
+        "frequency": "1日300件",
+        "time_per_task": "1分"
+      },
+      "constraints": [
+        "予算300万円",
+        "顧客の個人情報がメールに含まれる"
+      ],
+      "expected_outcomes": [
+        "振り分け作業の自動化",
+        "担当チームへの即時ルーティング"
+      ]
     },
-    "constraints": [
-      "予算300万円",
-      "顧客の個人情報がメールに含まれる"
-    ],
-    "expected_outcomes": [
-      "振り分け作業の自動化",
-      "担当チームへの即時ルーティング"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "自然言語処理によるメール内容の自動分類とルーティングの提案",
@@ -360,26 +430,33 @@
   },
   {
     "case_id": "hd_004",
-    "department": "カスタマーサポート",
-    "situation": "BtoB製品のサポート窓口にて、オペレーター50名が顧客と通話しながら、1万ページ以上あるPDFマニュアル群から該当箇所を検索して回答している。",
-    "problems": [
-      "マニュアル内の検索性が悪く、通話の保留時間が長くなっている",
-      "新人の独り立ちまでに半年かかる"
-    ],
-    "workload": {
-      "people": 50,
-      "frequency": "1人1日20件",
-      "time_per_task": "通話中検索に平均10分"
+    "base_case_id": "hd_004",
+    "input_mode": "structured",
+    "user_message": "BtoB製品のサポート窓口にて、オペレーター50名が顧客と通話しながら、1万ページ以上あるPDFマニュアル群から該当箇所を検索して回答している。",
+    "facts": {
+      "department": "カスタマーサポート",
+      "situation": "BtoB製品のサポート窓口にて、オペレーター50名が顧客と通話しながら、1万ページ以上あるPDFマニュアル群から該当箇所を検索して回答している。",
+      "problems": [
+        "マニュアル内の検索性が悪く、通話の保留時間が長くなっている",
+        "新人の独り立ちまでに半年かかる"
+      ],
+      "workload": {
+        "people": 50,
+        "frequency": "1人1日20件",
+        "time_per_task": "通話中検索に平均10分"
+      },
+      "constraints": [
+        "予算3,000万円",
+        "レスポンスタイムは5秒以内であること",
+        "誤った案内は重大な損害賠償に繋がる"
+      ],
+      "expected_outcomes": [
+        "保留時間（検索時間）の短縮",
+        "新人教育コストの削減"
+      ]
     },
-    "constraints": [
-      "予算3,000万円",
-      "レスポンスタイムは5秒以内であること",
-      "誤った案内は重大な損害賠償に繋がる"
-    ],
-    "expected_outcomes": [
-      "保留時間（検索時間）の短縮",
-      "新人教育コストの削減"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "高速な検索エンジンとRAGを組み合わせたオペレーター支援AIの提案",
@@ -393,25 +470,32 @@
   },
   {
     "case_id": "logi_002",
-    "department": "製造",
-    "situation": "工場のコンベアを流れる基板を目視で確認し、傷やはんだ付けの不良を検査員が弾いている。",
-    "problems": [
-      "検査員の疲労による見逃しが発生する",
-      "熟練工の勘に頼っており、ノウハウが継承できない"
-    ],
-    "workload": {
-      "people": 10,
-      "frequency": "1日10,000個",
-      "time_per_task": "5秒"
+    "base_case_id": "logi_002",
+    "input_mode": "structured",
+    "user_message": "工場のコンベアを流れる基板を目視で確認し、傷やはんだ付けの不良を検査員が弾いている。",
+    "facts": {
+      "department": "製造",
+      "situation": "工場のコンベアを流れる基板を目視で確認し、傷やはんだ付けの不良を検査員が弾いている。",
+      "problems": [
+        "検査員の疲労による見逃しが発生する",
+        "熟練工の勘に頼っており、ノウハウが継承できない"
+      ],
+      "workload": {
+        "people": 10,
+        "frequency": "1日10,000個",
+        "time_per_task": "5秒"
+      },
+      "constraints": [
+        "予算2,000万円",
+        "工場内はクラウドへの接続が不安定"
+      ],
+      "expected_outcomes": [
+        "不良品流出率の低下",
+        "検査業務の標準化と自動化"
+      ]
     },
-    "constraints": [
-      "予算2,000万円",
-      "工場内はクラウドへの接続が不安定"
-    ],
-    "expected_outcomes": [
-      "不良品流出率の低下",
-      "検査業務の標準化と自動化"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "画像認識AI（コンピュータビジョン）の導入提案",
@@ -424,25 +508,32 @@
   },
   {
     "case_id": "logi_003_no_ai",
-    "department": "物流",
-    "situation": "巨大な倉庫において、月末に棚卸しのため担当者20名が目視で段ボールの数を数え、紙のバインダーに正の字を書いて記録している。",
-    "problems": [
-      "数え間違いが多発する",
-      "後日Excelに転記する手間がかかる"
-    ],
-    "workload": {
-      "people": 20,
-      "frequency": "月1回",
-      "time_per_task": "8時間"
+    "base_case_id": "logi_003_no_ai",
+    "input_mode": "structured",
+    "user_message": "巨大な倉庫において、月末に棚卸しのため担当者20名が目視で段ボールの数を数え、紙のバインダーに正の字を書いて記録している。",
+    "facts": {
+      "department": "物流",
+      "situation": "巨大な倉庫において、月末に棚卸しのため担当者20名が目視で段ボールの数を数え、紙のバインダーに正の字を書いて記録している。",
+      "problems": [
+        "数え間違いが多発する",
+        "後日Excelに転記する手間がかかる"
+      ],
+      "workload": {
+        "people": 20,
+        "frequency": "月1回",
+        "time_per_task": "8時間"
+      },
+      "constraints": [
+        "予算500万円以下",
+        "段ボールの配置は日々変わる"
+      ],
+      "expected_outcomes": [
+        "棚卸し精度の向上",
+        "作業時間の半減と転記業務のゼロ化"
+      ]
     },
-    "constraints": [
-      "予算500万円以下",
-      "段ボールの配置は日々変わる"
-    ],
-    "expected_outcomes": [
-      "棚卸し精度の向上",
-      "作業時間の半減と転記業務のゼロ化"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "バーコードスキャナ、ハンディターミナル、またはRFIDタグの導入によるデジタル化の提案（AI不要）"
@@ -454,25 +545,32 @@
   },
   {
     "case_id": "logi_004",
-    "department": "物流",
-    "situation": "配車担当者が、毎日50台のトラックに対する1000件の配送先へのルートを、Googleマップと経験を頼りにパズル形式で作成している。",
-    "problems": [
-      "ルート作成に毎日数時間かかり、担当者が休めない",
-      "非効率なルートによる残業代や燃料費の増大"
-    ],
-    "workload": {
-      "people": 2,
-      "frequency": "毎日",
-      "time_per_task": "4時間"
+    "base_case_id": "logi_004",
+    "input_mode": "structured",
+    "user_message": "配車担当者が、毎日50台のトラックに対する1000件の配送先へのルートを、Googleマップと経験を頼りにパズル形式で作成している。",
+    "facts": {
+      "department": "物流",
+      "situation": "配車担当者が、毎日50台のトラックに対する1000件の配送先へのルートを、Googleマップと経験を頼りにパズル形式で作成している。",
+      "problems": [
+        "ルート作成に毎日数時間かかり、担当者が休めない",
+        "非効率なルートによる残業代や燃料費の増大"
+      ],
+      "workload": {
+        "people": 2,
+        "frequency": "毎日",
+        "time_per_task": "4時間"
+      },
+      "constraints": [
+        "予算1,000万円",
+        "トラックの積載量や配送指定時間（時間指定）を守る必要がある"
+      ],
+      "expected_outcomes": [
+        "配車計画作成の自動化・短縮化",
+        "走行距離の短縮によるコスト削減"
+      ]
     },
-    "constraints": [
-      "予算1,000万円",
-      "トラックの積載量や配送指定時間（時間指定）を守る必要がある"
-    ],
-    "expected_outcomes": [
-      "配車計画作成の自動化・短縮化",
-      "走行距離の短縮によるコスト削減"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "組合せ最適化技術（数理計画ソルバー）を活用した動的配車システムの提案"
@@ -484,25 +582,32 @@
   },
   {
     "case_id": "dev_001",
-    "department": "開発",
-    "situation": "海外ベンダーから英語で送られてくるAPI仕様書や技術ドキュメントを、若手エンジニアが無料のWeb翻訳ツールを使いながら時間をかけて解読している。",
-    "problems": [
-      "専門用語が正しく翻訳されず意味不明になる",
-      "翻訳作業そのものに時間を奪われ、本来の開発が進まない"
-    ],
-    "workload": {
-      "people": 10,
-      "frequency": "週に2〜3ドキュメント",
-      "time_per_task": "1ドキュメント数時間"
+    "base_case_id": "dev_001",
+    "input_mode": "structured",
+    "user_message": "海外ベンダーから英語で送られてくるAPI仕様書や技術ドキュメントを、若手エンジニアが無料のWeb翻訳ツールを使いながら時間をかけて解読している。",
+    "facts": {
+      "department": "開発",
+      "situation": "海外ベンダーから英語で送られてくるAPI仕様書や技術ドキュメントを、若手エンジニアが無料のWeb翻訳ツールを使いながら時間をかけて解読している。",
+      "problems": [
+        "専門用語が正しく翻訳されず意味不明になる",
+        "翻訳作業そのものに時間を奪われ、本来の開発が進まない"
+      ],
+      "workload": {
+        "people": 10,
+        "frequency": "週に2〜3ドキュメント",
+        "time_per_task": "1ドキュメント数時間"
+      },
+      "constraints": [
+        "予算月額10万円程度",
+        "自社のIP（知的財産）に関わるため、入力データが学習されないセキュアな環境が必要"
+      ],
+      "expected_outcomes": [
+        "翻訳の精度向上",
+        "ドキュメント理解のスピードアップ"
+      ]
     },
-    "constraints": [
-      "予算月額10万円程度",
-      "自社のIP（知的財産）に関わるため、入力データが学習されないセキュアな環境が必要"
-    ],
-    "expected_outcomes": [
-      "翻訳の精度向上",
-      "ドキュメント理解のスピードアップ"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "DeepL Proや法人向けChatGPT（データ学習オプトアウト設定済）の導入提案",
@@ -515,25 +620,32 @@
   },
   {
     "case_id": "gnrl_003_no_ai",
-    "department": "総務",
-    "situation": "各部署から提出される社内規定やマニュアルのWordファイルについて、総務担当者がフォント、文字サイズ、インデント、見出し番号のズレを全て手作業で修正し、体裁を整えている。",
-    "problems": [
-      "本来不要な「見た目を整えるだけ」の作業に膨大な時間がかかっている",
-      "修正漏れが指摘される"
-    ],
-    "workload": {
-      "people": 3,
-      "frequency": "週に20件",
-      "time_per_task": "30分"
+    "base_case_id": "gnrl_003_no_ai",
+    "input_mode": "structured",
+    "user_message": "各部署から提出される社内規定やマニュアルのWordファイルについて、総務担当者がフォント、文字サイズ、インデント、見出し番号のズレを全て手作業で修正し、体裁を整えている。",
+    "facts": {
+      "department": "総務",
+      "situation": "各部署から提出される社内規定やマニュアルのWordファイルについて、総務担当者がフォント、文字サイズ、インデント、見出し番号のズレを全て手作業で修正し、体裁を整えている。",
+      "problems": [
+        "本来不要な「見た目を整えるだけ」の作業に膨大な時間がかかっている",
+        "修正漏れが指摘される"
+      ],
+      "workload": {
+        "people": 3,
+        "frequency": "週に20件",
+        "time_per_task": "30分"
+      },
+      "constraints": [
+        "予算ほぼゼロ",
+        "即効性が求められる"
+      ],
+      "expected_outcomes": [
+        "体裁修正にかかる時間の消滅",
+        "全社でのフォーマット統一"
+      ]
     },
-    "constraints": [
-      "予算ほぼゼロ",
-      "即効性が求められる"
-    ],
-    "expected_outcomes": [
-      "体裁修正にかかる時間の消滅",
-      "全社でのフォーマット統一"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "AIではなく、Wordの「スタイル」機能や社内統一テンプレートの配布・運用徹底というプロセス改善の提案"
@@ -545,25 +657,32 @@
   },
   {
     "case_id": "est_002",
-    "department": "不動産",
-    "situation": "管理会社からFAXで送られてくる物件の間取り図（紙）を、データ入力スタッフがPCの専用ソフトを使って手作業でなぞり、デジタルデータ（2D/3D）に書き起こしている。",
-    "problems": [
-      "トレース作業に時間がかかり、Web公開へのタイムラグが発生する",
-      "繁忙期は入力スタッフがパンクする"
-    ],
-    "workload": {
-      "people": 10,
-      "frequency": "1日1人10件",
-      "time_per_task": "40分"
+    "base_case_id": "est_002",
+    "input_mode": "structured",
+    "user_message": "管理会社からFAXで送られてくる物件の間取り図（紙）を、データ入力スタッフがPCの専用ソフトを使って手作業でなぞり、デジタルデータ（2D/3D）に書き起こしている。",
+    "facts": {
+      "department": "不動産",
+      "situation": "管理会社からFAXで送られてくる物件の間取り図（紙）を、データ入力スタッフがPCの専用ソフトを使って手作業でなぞり、デジタルデータ（2D/3D）に書き起こしている。",
+      "problems": [
+        "トレース作業に時間がかかり、Web公開へのタイムラグが発生する",
+        "繁忙期は入力スタッフがパンクする"
+      ],
+      "workload": {
+        "people": 10,
+        "frequency": "1日1人10件",
+        "time_per_task": "40分"
+      },
+      "constraints": [
+        "予算2,000万円",
+        "寸法やドアの開閉方向などの正確性が求められる"
+      ],
+      "expected_outcomes": [
+        "図面デジタル化のリードタイム短縮",
+        "繁忙期のボトルネック解消"
+      ]
     },
-    "constraints": [
-      "予算2,000万円",
-      "寸法やドアの開閉方向などの正確性が求められる"
-    ],
-    "expected_outcomes": [
-      "図面デジタル化のリードタイム短縮",
-      "繁忙期のボトルネック解消"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "間取り図に特化した画像認識AI（AI-OCR/CAD変換）の導入提案",
@@ -576,25 +695,32 @@
   },
   {
     "case_id": "retail_001",
-    "department": "店舗営業",
-    "situation": "アパレル店舗にて、店長が過去の売上実績、天候、近隣のイベント情報を加味して、各商品の発注数を勘と経験で決めている。",
-    "problems": [
-      "過剰在庫による値引きロスと、欠品による機会損失が起きている",
-      "新人店長だと精度が著しく低い"
-    ],
-    "workload": {
-      "people": 50,
-      "frequency": "毎日",
-      "time_per_task": "60分"
+    "base_case_id": "retail_001",
+    "input_mode": "structured",
+    "user_message": "アパレル店舗にて、店長が過去の売上実績、天候、近隣のイベント情報を加味して、各商品の発注数を勘と経験で決めている。",
+    "facts": {
+      "department": "店舗営業",
+      "situation": "アパレル店舗にて、店長が過去の売上実績、天候、近隣のイベント情報を加味して、各商品の発注数を勘と経験で決めている。",
+      "problems": [
+        "過剰在庫による値引きロスと、欠品による機会損失が起きている",
+        "新人店長だと精度が著しく低い"
+      ],
+      "workload": {
+        "people": 50,
+        "frequency": "毎日",
+        "time_per_task": "60分"
+      },
+      "constraints": [
+        "予算1,000万円",
+        "POSデータ、天気予報データは取得可能"
+      ],
+      "expected_outcomes": [
+        "在庫ロスの削減",
+        "発注業務の標準化・自動化"
+      ]
     },
-    "constraints": [
-      "予算1,000万円",
-      "POSデータ、天気予報データは取得可能"
-    ],
-    "expected_outcomes": [
-      "在庫ロスの削減",
-      "発注業務の標準化・自動化"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "機械学習を用いた需要予測モデルの構築提案",
@@ -607,25 +733,32 @@
   },
   {
     "case_id": "retail_002_no_ai",
-    "department": "店舗営業",
-    "situation": "全国100店舗の店長が、毎日の閉店後に「今日の客層、天候、所感、スタッフの様子」を長文のテキストで日報として本部に送信しているが、本部担当者は誰も読んでいない。",
-    "problems": [
-      "店長の業務負担が大きいだけで、ビジネス上の価値を生んでいない",
-      "残業代の要因になっている"
-    ],
-    "workload": {
-      "people": 100,
-      "frequency": "毎日",
-      "time_per_task": "30分"
+    "base_case_id": "retail_002_no_ai",
+    "input_mode": "structured",
+    "user_message": "全国100店舗の店長が、毎日の閉店後に「今日の客層、天候、所感、スタッフの様子」を長文のテキストで日報として本部に送信しているが、本部担当者は誰も読んでいない。",
+    "facts": {
+      "department": "店舗営業",
+      "situation": "全国100店舗の店長が、毎日の閉店後に「今日の客層、天候、所感、スタッフの様子」を長文のテキストで日報として本部に送信しているが、本部担当者は誰も読んでいない。",
+      "problems": [
+        "店長の業務負担が大きいだけで、ビジネス上の価値を生んでいない",
+        "残業代の要因になっている"
+      ],
+      "workload": {
+        "people": 100,
+        "frequency": "毎日",
+        "time_per_task": "30分"
+      },
+      "constraints": [
+        "予算100万円以下",
+        "店舗の負担を最優先で減らしたい"
+      ],
+      "expected_outcomes": [
+        "店長の業務時間削減",
+        "無駄な業務の廃止"
+      ]
     },
-    "constraints": [
-      "予算100万円以下",
-      "店舗の負担を最優先で減らしたい"
-    ],
-    "expected_outcomes": [
-      "店長の業務時間削減",
-      "無駄な業務の廃止"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "LLMで日報を要約するのではなく、日報制度そのものを廃止する、または定量データのみの入力へ変更する（BPR）提案"
@@ -637,25 +770,32 @@
   },
   {
     "case_id": "mkt_001",
-    "department": "マーケティング",
-    "situation": "Web広告の運用担当者が、ABテストのために毎週100パターンのキャッチコピーをExcel上で脳内を絞り出しながら作成している。",
-    "problems": [
-      "アイデアが枯渇し、似たようなコピーばかりになる",
-      "コピー作成に時間がかかり、分析や戦略立案の時間がとれない"
-    ],
-    "workload": {
-      "people": 3,
-      "frequency": "週に1回",
-      "time_per_task": "5時間"
+    "base_case_id": "mkt_001",
+    "input_mode": "structured",
+    "user_message": "Web広告の運用担当者が、ABテストのために毎週100パターンのキャッチコピーをExcel上で脳内を絞り出しながら作成している。",
+    "facts": {
+      "department": "マーケティング",
+      "situation": "Web広告の運用担当者が、ABテストのために毎週100パターンのキャッチコピーをExcel上で脳内を絞り出しながら作成している。",
+      "problems": [
+        "アイデアが枯渇し、似たようなコピーばかりになる",
+        "コピー作成に時間がかかり、分析や戦略立案の時間がとれない"
+      ],
+      "workload": {
+        "people": 3,
+        "frequency": "週に1回",
+        "time_per_task": "5時間"
+      },
+      "constraints": [
+        "予算年間120万円以下",
+        "自社のブランドガイドライン（使用禁止用語など）を厳守する必要がある"
+      ],
+      "expected_outcomes": [
+        "多様なコピーの迅速な大量生成",
+        "担当者の企画時間へのシフト"
+      ]
     },
-    "constraints": [
-      "予算年間120万円以下",
-      "自社のブランドガイドライン（使用禁止用語など）を厳守する必要がある"
-    ],
-    "expected_outcomes": [
-      "多様なコピーの迅速な大量生成",
-      "担当者の企画時間へのシフト"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "生成AI（LLM）によるプロンプトエンジニアリングを活用したコピー生成の提案",
@@ -668,25 +808,32 @@
   },
   {
     "case_id": "mkt_002",
-    "department": "マーケティング",
-    "situation": "自社ブランドに関するSNSの投稿（月間数万件）を、担当者が目視で読み、ポジティブ・ネガティブの分類と、主な不満点をExcelにまとめている。",
-    "problems": [
-      "処理しきれず、サンプル抽出での分析に留まっている",
-      "炎上の火種（急激なネガティブ投稿の増加）への気づきが遅れる"
-    ],
-    "workload": {
-      "people": 2,
-      "frequency": "毎月",
-      "time_per_task": "40時間"
+    "base_case_id": "mkt_002",
+    "input_mode": "structured",
+    "user_message": "自社ブランドに関するSNSの投稿（月間数万件）を、担当者が目視で読み、ポジティブ・ネガティブの分類と、主な不満点をExcelにまとめている。",
+    "facts": {
+      "department": "マーケティング",
+      "situation": "自社ブランドに関するSNSの投稿（月間数万件）を、担当者が目視で読み、ポジティブ・ネガティブの分類と、主な不満点をExcelにまとめている。",
+      "problems": [
+        "処理しきれず、サンプル抽出での分析に留まっている",
+        "炎上の火種（急激なネガティブ投稿の増加）への気づきが遅れる"
+      ],
+      "workload": {
+        "people": 2,
+        "frequency": "毎月",
+        "time_per_task": "40時間"
+      },
+      "constraints": [
+        "予算300万円以下",
+        "リアルタイム性を高めたい"
+      ],
+      "expected_outcomes": [
+        "全量のセンチメント分析の実現",
+        "炎上リスクの早期検知"
+      ]
     },
-    "constraints": [
-      "予算300万円以下",
-      "リアルタイム性を高めたい"
-    ],
-    "expected_outcomes": [
-      "全量のセンチメント分析の実現",
-      "炎上リスクの早期検知"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "自然言語処理（感情分析API等）を用いたソーシャルリスニング自動化の提案",
@@ -699,25 +846,32 @@
   },
   {
     "case_id": "dev_002",
-    "department": "開発",
-    "situation": "若手エンジニアが書いたソースコードを、シニアエンジニアが時間をかけて目視でコードレビューし、コーディング規約違反や基本的なセキュリティ脆弱性を指摘している。",
-    "problems": [
-      "シニアエンジニアの負担が大きすぎる",
-      "レビュー待ちによって開発スピードが低下している"
-    ],
-    "workload": {
-      "people": 5,
-      "frequency": "1日10件のPull Request",
-      "time_per_task": "1件30分"
+    "base_case_id": "dev_002",
+    "input_mode": "structured",
+    "user_message": "若手エンジニアが書いたソースコードを、シニアエンジニアが時間をかけて目視でコードレビューし、コーディング規約違反や基本的なセキュリティ脆弱性を指摘している。",
+    "facts": {
+      "department": "開発",
+      "situation": "若手エンジニアが書いたソースコードを、シニアエンジニアが時間をかけて目視でコードレビューし、コーディング規約違反や基本的なセキュリティ脆弱性を指摘している。",
+      "problems": [
+        "シニアエンジニアの負担が大きすぎる",
+        "レビュー待ちによって開発スピードが低下している"
+      ],
+      "workload": {
+        "people": 5,
+        "frequency": "1日10件のPull Request",
+        "time_per_task": "1件30分"
+      },
+      "constraints": [
+        "予算年間300万円",
+        "ソースコードは社外秘であり、パブリックなSaaSには流したくない"
+      ],
+      "expected_outcomes": [
+        "基本的な指摘事項の自動化",
+        "シニア層のコア業務への集中"
+      ]
     },
-    "constraints": [
-      "予算年間300万円",
-      "ソースコードは社外秘であり、パブリックなSaaSには流したくない"
-    ],
-    "expected_outcomes": [
-      "基本的な指摘事項の自動化",
-      "シニア層のコア業務への集中"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "静的コード解析ツール（SonarQube等）やセキュアなAIコーディング支援（GitHub Copilot Enterprise等）の導入提案",
@@ -730,25 +884,32 @@
   },
   {
     "case_id": "gnrl_004_vague",
-    "department": "経営企画",
-    "situation": "社長から「最近流行りの生成AIを使って、バックオフィスの業務コストをとりあえず30%削減しろ。予算は出す」と曖昧なトップダウン指示が降りてきた。",
-    "problems": [
-      "具体的な課題やペインポイントが特定されていない",
-      "現状の業務の棚卸しができていない"
-    ],
-    "workload": {
-      "people": "バックオフィス全体100名",
-      "frequency": "不明",
-      "time_per_task": "不明"
+    "base_case_id": "gnrl_004_vague",
+    "input_mode": "structured",
+    "user_message": "社長から「最近流行りの生成AIを使って、バックオフィスの業務コストをとりあえず30%削減しろ。予算は出す」と曖昧なトップダウン指示が降りてきた。",
+    "facts": {
+      "department": "経営企画",
+      "situation": "社長から「最近流行りの生成AIを使って、バックオフィスの業務コストをとりあえず30%削減しろ。予算は出す」と曖昧なトップダウン指示が降りてきた。",
+      "problems": [
+        "具体的な課題やペインポイントが特定されていない",
+        "現状の業務の棚卸しができていない"
+      ],
+      "workload": {
+        "people": "バックオフィス全体100名",
+        "frequency": "不明",
+        "time_per_task": "不明"
+      },
+      "constraints": [
+        "予算3,000万円",
+        "半年で何らかの成果（PoC結果）を報告する必要がある"
+      ],
+      "expected_outcomes": [
+        "具体的なAI適用領域の特定",
+        "実現可能性とROIの算出"
+      ]
     },
-    "constraints": [
-      "予算3,000万円",
-      "半年で何らかの成果（PoC結果）を報告する必要がある"
-    ],
-    "expected_outcomes": [
-      "具体的なAI適用領域の特定",
-      "実現可能性とROIの算出"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "いきなりツールを導入せず、業務棚卸し（アセスメント）やプロセスマイニングを実施する提案",
@@ -762,25 +923,32 @@
   },
   {
     "case_id": "legal_002",
-    "department": "法務",
-    "situation": "社内の各部門から上がってくる法務相談（「この表現は景表法に違反するか？」「この契約書の解釈は？」など）に対し、法務部員が過去の相談履歴ファイルや書籍を検索して回答している。",
-    "problems": [
-      "回答までに数日かかり、事業スピードを落としている",
-      "法務部員のナレッジが属人化している"
-    ],
-    "workload": {
-      "people": 3,
-      "frequency": "月間150件",
-      "time_per_task": "1件あたり2時間"
+    "base_case_id": "legal_002",
+    "input_mode": "structured",
+    "user_message": "社内の各部門から上がってくる法務相談（「この表現は景表法に違反するか？」「この契約書の解釈は？」など）に対し、法務部員が過去の相談履歴ファイルや書籍を検索して回答している。",
+    "facts": {
+      "department": "法務",
+      "situation": "社内の各部門から上がってくる法務相談（「この表現は景表法に違反するか？」「この契約書の解釈は？」など）に対し、法務部員が過去の相談履歴ファイルや書籍を検索して回答している。",
+      "problems": [
+        "回答までに数日かかり、事業スピードを落としている",
+        "法務部員のナレッジが属人化している"
+      ],
+      "workload": {
+        "people": 3,
+        "frequency": "月間150件",
+        "time_per_task": "1件あたり2時間"
+      },
+      "constraints": [
+        "予算500万円以下",
+        "法律に関わるため不正確な回答は致命的"
+      ],
+      "expected_outcomes": [
+        "一次回答のスピードアップ",
+        "過去ナレッジの資産化"
+      ]
     },
-    "constraints": [
-      "予算500万円以下",
-      "法律に関わるため不正確な回答は致命的"
-    ],
-    "expected_outcomes": [
-      "一次回答のスピードアップ",
-      "過去ナレッジの資産化"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "過去の相談履歴をベクトル化したRAG（検索拡張生成）チャットボットの提案",
@@ -793,25 +961,32 @@
   },
   {
     "case_id": "rnd_001",
-    "department": "研究開発",
-    "situation": "製薬会社の研究員が、新薬の副作用リスクを調べるため、PubMedなどの医療系論文データベースから関連論文を英語で検索し、読み込んでいる。",
-    "problems": [
-      "膨大な論文から目的の記述を探し出すのに数週間かかる",
-      "重要な知見を見落とすリスクがある"
-    ],
-    "workload": {
-      "people": 20,
-      "frequency": "プロジェクト毎に随時",
-      "time_per_task": "1回の調査に数十時間"
+    "base_case_id": "rnd_001",
+    "input_mode": "structured",
+    "user_message": "製薬会社の研究員が、新薬の副作用リスクを調べるため、PubMedなどの医療系論文データベースから関連論文を英語で検索し、読み込んでいる。",
+    "facts": {
+      "department": "研究開発",
+      "situation": "製薬会社の研究員が、新薬の副作用リスクを調べるため、PubMedなどの医療系論文データベースから関連論文を英語で検索し、読み込んでいる。",
+      "problems": [
+        "膨大な論文から目的の記述を探し出すのに数週間かかる",
+        "重要な知見を見落とすリスクがある"
+      ],
+      "workload": {
+        "people": 20,
+        "frequency": "プロジェクト毎に随時",
+        "time_per_task": "1回の調査に数十時間"
+      },
+      "constraints": [
+        "予算2,000万円",
+        "生命に関わる領域のため、事実の捏造（ハルシネーション）は絶対にあってはならない"
+      ],
+      "expected_outcomes": [
+        "文献調査の圧倒的な時短",
+        "関連文献の網羅性向上"
+      ]
     },
-    "constraints": [
-      "予算2,000万円",
-      "生命に関わる領域のため、事実の捏造（ハルシネーション）は絶対にあってはならない"
-    ],
-    "expected_outcomes": [
-      "文献調査の圧倒的な時短",
-      "関連文献の網羅性向上"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "医療分野に特化したLLMや、信頼できるデータベースのみを参照するRAGの構築",
@@ -824,25 +999,32 @@
   },
   {
     "case_id": "cs_001",
-    "department": "カスタマーサクセス",
-    "situation": "顧客との定例ミーティング後、担当者が記憶を頼りに「顧客の感情（不満そう、満足そう等）」や「解約リスク」の所感をテキストでCRMに入力している。",
-    "problems": [
-      "担当者の主観が入り、客観的なリスク評価ができていない",
-      "入力自体が面倒で後回しにされがち"
-    ],
-    "workload": {
-      "people": 30,
-      "frequency": "1日4件",
-      "time_per_task": "15分"
+    "base_case_id": "cs_001",
+    "input_mode": "structured",
+    "user_message": "顧客との定例ミーティング後、担当者が記憶を頼りに「顧客の感情（不満そう、満足そう等）」や「解約リスク」の所感をテキストでCRMに入力している。",
+    "facts": {
+      "department": "カスタマーサクセス",
+      "situation": "顧客との定例ミーティング後、担当者が記憶を頼りに「顧客の感情（不満そう、満足そう等）」や「解約リスク」の所感をテキストでCRMに入力している。",
+      "problems": [
+        "担当者の主観が入り、客観的なリスク評価ができていない",
+        "入力自体が面倒で後回しにされがち"
+      ],
+      "workload": {
+        "people": 30,
+        "frequency": "1日4件",
+        "time_per_task": "15分"
+      },
+      "constraints": [
+        "予算300万円",
+        "ZoomおよびTeamsでの会議がメイン"
+      ],
+      "expected_outcomes": [
+        "CRM入力業務の自動化",
+        "客観的な解約リスクの可視化"
+      ]
     },
-    "constraints": [
-      "予算300万円",
-      "ZoomおよびTeamsでの会議がメイン"
-    ],
-    "expected_outcomes": [
-      "CRM入力業務の自動化",
-      "客観的な解約リスクの可視化"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "音声解析AI・議事録AIによる通話内容のテキスト化と、LLMによる感情分析・リスクスコアリングの提案"
@@ -854,25 +1036,32 @@
   },
   {
     "case_id": "acc_006_no_ai",
-    "department": "経理",
-    "situation": "従業員がスマホで領収書を撮影し経費精算システムにアップロードしているが、画像がブレたり暗かったりするため、経理側で読み取れず、全体の30%を差し戻している。",
-    "problems": [
-      "差し戻しのやり取りで経理も従業員も疲弊している",
-      "精算処理が遅延する"
-    ],
-    "workload": {
-      "people": "経理5名",
-      "frequency": "月間1,000件の差し戻し",
-      "time_per_task": "1件5分"
+    "base_case_id": "acc_006_no_ai",
+    "input_mode": "structured",
+    "user_message": "従業員がスマホで領収書を撮影し経費精算システムにアップロードしているが、画像がブレたり暗かったりするため、経理側で読み取れず、全体の30%を差し戻している。",
+    "facts": {
+      "department": "経理",
+      "situation": "従業員がスマホで領収書を撮影し経費精算システムにアップロードしているが、画像がブレたり暗かったりするため、経理側で読み取れず、全体の30%を差し戻している。",
+      "problems": [
+        "差し戻しのやり取りで経理も従業員も疲弊している",
+        "精算処理が遅延する"
+      ],
+      "workload": {
+        "people": "経理5名",
+        "frequency": "月間1,000件の差し戻し",
+        "time_per_task": "1件5分"
+      },
+      "constraints": [
+        "予算ゼロ（追加のシステム投資はできない）",
+        "すぐにでも改善したい"
+      ],
+      "expected_outcomes": [
+        "不鮮明な画像の撲滅",
+        "差し戻し件数の激減"
+      ]
     },
-    "constraints": [
-      "予算ゼロ（追加のシステム投資はできない）",
-      "すぐにでも改善したい"
-    ],
-    "expected_outcomes": [
-      "不鮮明な画像の撲滅",
-      "差し戻し件数の激減"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "システム投資をせず、全社に「領収書撮影のガイドライン（背景を黒にする等）」を周知する、または手書き入力を義務付けるルールの見直し提案"
@@ -884,25 +1073,32 @@
   },
   {
     "case_id": "logi_005",
-    "department": "物流",
-    "situation": "倉庫でのピッキング作業において、作業員が紙のリストを見ながらカートを押して商品を回収しているが、手が塞がるため作業効率が悪い。",
-    "problems": [
-      "紙のリストへのチェック漏れによる誤ピッキング",
-      "ピッキングスピードが上がらない"
-    ],
-    "workload": {
-      "people": 30,
-      "frequency": "1日中",
-      "time_per_task": "1行あたり数十秒"
+    "base_case_id": "logi_005",
+    "input_mode": "structured",
+    "user_message": "倉庫でのピッキング作業において、作業員が紙のリストを見ながらカートを押して商品を回収しているが、手が塞がるため作業効率が悪い。",
+    "facts": {
+      "department": "物流",
+      "situation": "倉庫でのピッキング作業において、作業員が紙のリストを見ながらカートを押して商品を回収しているが、手が塞がるため作業効率が悪い。",
+      "problems": [
+        "紙のリストへのチェック漏れによる誤ピッキング",
+        "ピッキングスピードが上がらない"
+      ],
+      "workload": {
+        "people": 30,
+        "frequency": "1日中",
+        "time_per_task": "1行あたり数十秒"
+      },
+      "constraints": [
+        "予算1,500万円",
+        "倉庫内はフォークリフトなどの騒音がある"
+      ],
+      "expected_outcomes": [
+        "ハンズフリー化による作業効率化",
+        "誤ピッキングの削減"
+      ]
     },
-    "constraints": [
-      "予算1,500万円",
-      "倉庫内はフォークリフトなどの騒音がある"
-    ],
-    "expected_outcomes": [
-      "ハンズフリー化による作業効率化",
-      "誤ピッキングの削減"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "音声認識/合成AIを利用したボイスピッキングシステム、またはスマートグラス（AR）の導入提案",
@@ -915,25 +1111,32 @@
   },
   {
     "case_id": "sales_005",
-    "department": "経営企画・営業",
-    "situation": "競合他社10社のWebサイトを、担当者1名が毎日巡回し、製品の価格改定や新着ニュースがないか目視で確認してExcelにまとめている。",
-    "problems": [
-      "単純な情報収集に毎日時間を奪われている",
-      "サイトの更新を見落とすことがある"
-    ],
-    "workload": {
-      "people": 1,
-      "frequency": "毎日",
-      "time_per_task": "3時間"
+    "base_case_id": "sales_005",
+    "input_mode": "structured",
+    "user_message": "競合他社10社のWebサイトを、担当者1名が毎日巡回し、製品の価格改定や新着ニュースがないか目視で確認してExcelにまとめている。",
+    "facts": {
+      "department": "経営企画・営業",
+      "situation": "競合他社10社のWebサイトを、担当者1名が毎日巡回し、製品の価格改定や新着ニュースがないか目視で確認してExcelにまとめている。",
+      "problems": [
+        "単純な情報収集に毎日時間を奪われている",
+        "サイトの更新を見落とすことがある"
+      ],
+      "workload": {
+        "people": 1,
+        "frequency": "毎日",
+        "time_per_task": "3時間"
+      },
+      "constraints": [
+        "予算50万円以下",
+        "対象のWebサイトの構造は頻繁に変わる可能性がある"
+      ],
+      "expected_outcomes": [
+        "情報収集の自動化",
+        "更新の即時検知"
+      ]
     },
-    "constraints": [
-      "予算50万円以下",
-      "対象のWebサイトの構造は頻繁に変わる可能性がある"
-    ],
-    "expected_outcomes": [
-      "情報収集の自動化",
-      "更新の即時検知"
-    ],
+    "omitted_from_input": [],
+    "expected_behavior": "",
     "case_specific_checks": {
       "expected_elements": [
         "WebスクレイピングツールやRPA、Webサイト変更検知ツールの導入提案",
