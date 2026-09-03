@@ -48,7 +48,7 @@ def call_agent(user_input: dict) -> str:
 
 
 if __name__ == "__main__":
-    with open("eval/case.json", encoding="utf-8") as f:
+    with open("eval/test_case.json", encoding="utf-8") as f:
         test_cases = json.load(f)
 
     client = AsyncOpenAI(api_key=os.getenv("OPEN_API_KEY"))
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     all_results = []
     errors = 0
 
-    for test_case in test_cases[:2]:
+    for test_case in test_cases[:5]:
         try:
             question = build_prompt(test_case)
             answer = call_agent(test_case)
@@ -101,12 +101,12 @@ if __name__ == "__main__":
 
     os.makedirs("outputs", exist_ok=True)
 
-    df.to_csv("outputs/results.csv", index=False, encoding="utf-8-sig")
+    df.to_csv("outputs/results_base.csv", index=False, encoding="utf-8-sig")
 
-    with open("outputs/results.json", "w", encoding="utf-8") as f:
+    with open("outputs/results_base.json", "w", encoding="utf-8") as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
 
-    with open("outputs/summary.json", "w", encoding="utf-8") as f:
+    with open("outputs/summary_base.json", "w", encoding="utf-8") as f:
         json.dump(num_summary | metrics_summary, f, ensure_ascii=False, indent=2)
 
     score_columns = ["id", *EVALUATION_CRITERIA.keys(), "average"]
