@@ -16,34 +16,9 @@ from dx_sol_suggest.core.pipeline import make_agent
 load_dotenv()
 
 
-def build_prompt(user_input: dict) -> str:
-    return f"""
-    あなたはDXコンサルタントです。
-    
-    業界/業種:
-    {user_input["department"]}
-    
-    状況:
-    {user_input["situation"]}
-    
-    課題:
-    {user_input["problems"]}
-    
-    業務量:
-    {user_input["workload"]}
-    
-    制約:
-    {user_input["constraints"]}
-    
-    DX提案を出力してください
-    """
-
-
-def call_agent(user_input: dict) -> str:
+def call_agent(content: str) -> str:
     agent = make_agent()
-    response = agent.invoke(
-        {"messages": [{"role": "user", "content": build_prompt(user_input)}]}
-    )
+    response = agent.invoke({"messages": [{"role": "user", "content": content}]})
     return str(response["messages"][-1].content)
 
 
@@ -65,12 +40,11 @@ if __name__ == "__main__":
 
     for test_case in test_cases[:5]:
         try:
-            question = build_prompt(test_case)
-            answer = call_agent(test_case)
+            answer = call_agent(test_case["user_message"])
 
             eval_dataset = Dataset.from_dict(
                 {
-                    "user_input": [question],
+                    "user_input": [test_case["user_message"]],
                     "response": [answer],
                 }
             )
@@ -79,7 +53,7 @@ if __name__ == "__main__":
 
             row = {
                 "id": test_case["case_id"],
-                "user_input": question,
+                "user_input": test_case["user_message"],
                 "response": answer,
             }
 
