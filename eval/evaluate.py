@@ -4,9 +4,8 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 from datasets import Dataset
-from langchain_openai import ChatOpenAI
 from openai import AsyncOpenAI
-from ragas import evaluate
+from ragas import evaluate, RunConfig
 from ragas.metrics import AspectCritic, RubricsScore
 from ragas.llms import llm_factory
 
@@ -63,7 +62,7 @@ if __name__ == "__main__":
     all_results = []
     errors = 0
 
-    for test_case in test_cases[:4]:
+    for test_case in test_cases:
         try:
             answer = call_agent(test_case["user_message"])
 
@@ -84,7 +83,10 @@ if __name__ == "__main__":
                 ),
             ]
 
-            result = evaluate(eval_dataset, metrics=case_metrics)
+            # NOTE: rate_limit_exceeded回避のため並列処理を無効化
+            result = evaluate(
+                eval_dataset, metrics=case_metrics, run_config=RunConfig(max_workers=1)
+            )
 
             row = {
                 "id": test_case["case_id"],
@@ -112,12 +114,12 @@ if __name__ == "__main__":
 
     os.makedirs("outputs", exist_ok=True)
 
-    df.to_csv("outputs/results_base.csv", index=False, encoding="utf-8-sig")
+    df.to_csv("outputs/results.csv", index=False, encoding="utf-8-sig")
 
-    with open("outputs/results_base.json", "w", encoding="utf-8") as f:
+    with open("outputs/results.json", "w", encoding="utf-8") as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
 
-    with open("outputs/summary_base.json", "w", encoding="utf-8") as f:
+    with open("outputs/summary.json", "w", encoding="utf-8") as f:
         json.dump(num_summary | metrics_summary, f, ensure_ascii=False, indent=2)
 
     score_columns = ["id", *EVALUATION_CRITERIA.keys(), "proper_behavior", "average"]
