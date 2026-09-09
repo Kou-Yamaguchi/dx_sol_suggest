@@ -6,6 +6,10 @@ def extract_issue_node(state: AgentState):
     pass
 
 
+def extract_constraint_node(state: AgentState):
+    """制約を抽出するノード"""
+
+
 def assume_issue_node(state: AgentState):
     """課題を推定するノード"""
     pass
@@ -13,6 +17,11 @@ def assume_issue_node(state: AgentState):
 
 def plan_sol_node(state: AgentState):
     """解決策を立案するノード"""
+    pass
+
+
+def check_constraint_node(state: AgentState):
+    """制約を遵守しているか確認するノード"""
     pass
 
 
