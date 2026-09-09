@@ -62,7 +62,7 @@ if __name__ == "__main__":
     all_results = []
     errors = 0
 
-    for test_case in test_cases:
+    for test_case in test_cases[:10]:
         try:
             answer = call_agent(test_case["user_message"])
 
@@ -114,12 +114,14 @@ if __name__ == "__main__":
 
     os.makedirs("outputs", exist_ok=True)
 
-    df.to_csv("outputs/results.csv", index=False, encoding="utf-8-sig")
+    suffix = "10_trial_prompt_enj"
 
-    with open("outputs/results.json", "w", encoding="utf-8") as f:
+    df.to_csv(f"outputs/results_{suffix}.csv", index=False, encoding="utf-8-sig")
+
+    with open(f"outputs/results_{suffix}.json", "w", encoding="utf-8") as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
 
-    with open("outputs/summary.json", "w", encoding="utf-8") as f:
+    with open(f"outputs/summary_{suffix}.json", "w", encoding="utf-8") as f:
         json.dump(num_summary | metrics_summary, f, ensure_ascii=False, indent=2)
 
     score_columns = ["id", *EVALUATION_CRITERIA.keys(), "proper_behavior", "average"]
