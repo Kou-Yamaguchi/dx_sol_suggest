@@ -42,7 +42,8 @@ def build_structured_prompt(user_input: dict) -> str:
 def call_agent(content: str) -> str:
     agent = make_agent()
     response = agent.invoke({"messages": [{"role": "user", "content": content}]})
-    return str(response["messages"][-1].content)
+    last_message = response["messages"][-1]
+    return str(response.get("summary") or getattr(last_message, "content", last_message))
 
 
 if __name__ == "__main__":
