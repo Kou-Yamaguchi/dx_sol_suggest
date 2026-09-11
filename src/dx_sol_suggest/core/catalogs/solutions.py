@@ -169,16 +169,37 @@ def lookup_solution_patterns(
     duration_months: int | None = None,
     scale_down: bool = False,
 ) -> list[dict[str, Any]]:
+    """
+    SOLUTION_PATTERNS に定義されたソリューションパターンを、
+    与えられた問題や制約条件に基づいてスコアリングし、
+    上位5件を選択する。
+
+    Args:
+        issues (list[str]): 問題や制約条件を表すテキスト
+        constraint_flags (list[str]): 制約条件を表すフラグ
+        budget_jpy (int | None, optional): 予算 (円)
+        duration_months (int | None, optional): 所要期間 (月)
+        scale_down (bool, optional): スケールダウンフラグ
+
+    Returns:
+        list[dict[str, Any]]: スコアリングされたソリューションパターンのリスト
+    """
     issue_text = " ".join(issues)
     flags = set(constraint_flags)
+
+    # NOTE: (仮)予算が50万円以下の場合は "tiny_budget" フラグを追加
     tiny_budget = budget_jpy is not None and budget_jpy <= 500_000
     if tiny_budget:
         flags.add("tiny_budget")
+
+    # NOTE: 低予算で転記やコピペが多い場合は "simple_copy" フラグを追加
     if any(token in issue_text for token in ("転記", "コピペ")) and tiny_budget:
         flags.add("simple_copy")
 
     scored: list[tuple[float, dict[str, Any]]] = []
     for pattern in SOLUTION_PATTERNS:
+
+        # NOTE: 制約条件に基づいてソリューションパターンをフィルタリング
         if any(flag in pattern["avoid_when"] for flag in flags):
             continue
         if scale_down and pattern["complexity"] in {"ml", "custom"}:
@@ -188,16 +209,22 @@ def lookup_solution_patterns(
         if duration_months is not None and duration_months <= 1:
             if pattern["typical_duration_months"] > 2:
                 continue
+
+        # NOTE: キーワードに基づいてスコアを計算
         hits = sum(1 for keyword in pattern["keywords"] if keyword in issue_text)
         score = float(hits)
         if "confidential" in flags and pattern["uses_public_cloud_llm"]:
             continue
         if "on_prem" in flags and pattern["id"] == "onprem_integration":
             score += 2
-        if hits == 0 and pattern["id"] not in {"onprem_integration", "template_standardization"}:
+        if hits == 0 and pattern["id"] not in {
+            "onprem_integration",
+            "template_standardization",
+        }:
             continue
         scored.append((score, pattern))
 
+    # NOTE: スコアに基づいてソリューションパターンをソート
     scored.sort(key=lambda item: item[0], reverse=True)
     selected = [item[1] for item in scored[:5]]
     if not selected:
@@ -207,11 +234,27 @@ def lookup_solution_patterns(
 
 
 def lookup_cost_range(solution_type: str, scale: str = "poc") -> dict[str, int]:
+    """
+    ソリューションパターンの初期コストと年間コストを返す。
+
+    Args:
+        solution_type (str): ソリューションパターンのID
+        scale (str, optional): スケール (poc: POC, macro: マクロ, large: 大規模)
+
+    Returns:
+        dict[str, int]: 初期コストと年間コストの辞書
+    """
     pattern = next((p for p in SOLUTION_PATTERNS if p["id"] == solution_type), None)
+
+    # NOTE: ソリューションパターンが見つからない場合はデフォルト値を返す。(仮)初期コスト30万円, 年間コスト0円に設定
     if pattern is None:
         return {"initial_jpy": 300_000, "annual_jpy": 0}
+
+    # NOTE: 初期コストと年間コストの中央値を計算
     initial = _mid(pattern["initial_cost_jpy"])
     annual = _mid(pattern["annual_cost_jpy"])
+
+    # NOTE: スケールに応じて初期コストと年間コストを調整
     if scale == "macro":
         initial = min(initial, 200_000)
         annual = min(annual, 0)
