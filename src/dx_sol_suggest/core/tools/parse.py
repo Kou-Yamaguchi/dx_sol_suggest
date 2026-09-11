@@ -8,10 +8,26 @@ WORKING_DAYS_PER_YEAR = 240
 
 
 def _to_int(value: str) -> int:
+    """
+    文字列を整数に変換する(カンマや全角カンマを削除する)。
+
+    Args:
+        value (str): 変換する文字列
+    Returns:
+        int: 変換された整数
+    """
     return int(value.replace(",", "").replace("，", ""))
 
 
 def parse_minutes(text: str | None) -> float | None:
+    """
+    時間・分表記を分単位の数値に変換する。
+
+    Args:
+        text (str | None): 変換する文字列
+    Returns:
+        float | None: 変換された分単位の数値
+    """
     if not text:
         return None
     hour = re.search(r"([\d.]+)\s*時間", text)
@@ -29,6 +45,19 @@ def parse_workload_impl(
     time_per_task: str | None,
     raw_text: str | None = None,
 ) -> Workload:
+    """
+    業務量を解析する。頻度・1件あたりの時間を年換算可能な業務量に正規化する。
+
+    Args:
+        people (int | None): 人数
+        frequency (str | None): 頻度
+        time_per_task (str | None): 1件あたりの時間
+        raw_text (str | None, optional): 生のテキスト
+
+    Returns:
+        Workload: 解析された業務量
+    """
+
     minutes = parse_minutes(time_per_task)
     tasks_per_year = None
     freq = frequency or ""
@@ -44,7 +73,9 @@ def parse_workload_impl(
     elif monthly:
         tasks_per_year = float(monthly.group(1)) * 12 * (people or 1)
     elif per_person_day:
-        tasks_per_year = float(per_person_day.group(1)) * WORKING_DAYS_PER_YEAR * (people or 1)
+        tasks_per_year = (
+            float(per_person_day.group(1)) * WORKING_DAYS_PER_YEAR * (people or 1)
+        )
     elif day_total:
         tasks_per_year = float(day_total.group(1)) * WORKING_DAYS_PER_YEAR
     elif per_day:
@@ -66,6 +97,16 @@ def parse_workload_impl(
 
 
 def parse_budget_jpy_impl(text: str | None) -> tuple[int | None, BudgetKind | None]:
+    """
+    予算を解析する。『500万円以下』『月額10万円』などを円と予算種別へ分解する。
+
+    Args:
+        text (str | None): 変換する文字列
+
+    Returns:
+        tuple[int | None, BudgetKind | None]: 解析された予算と予算種別
+    """
+
     if not text:
         return None, None
     if re.search(r"ほぼゼロ|予算ゼロ|投資はできない", text):
@@ -87,6 +128,16 @@ def parse_budget_jpy_impl(text: str | None) -> tuple[int | None, BudgetKind | No
 
 
 def parse_duration_months_impl(text: str | None) -> int | None:
+    """
+    期間表現を月数に正規化する。
+
+    Args:
+        text (str | None): 変換する文字列
+
+    Returns:
+        int | None: 変換された月数
+    """
+
     if not text:
         return None
     if re.search(r"半年", text):
@@ -104,6 +155,22 @@ def parse_duration_months_impl(text: str | None) -> int | None:
 
 
 def infer_constraint_flags(text: str) -> list[str]:
+    """
+    制約のフラグを取得する。
+    on_prem: オンプレ|既存.+連携|リプレイス
+    confidential: 外部AI|学習され|パブリック|社外秘|機密|セキュア
+    personal_info: 個人情報
+    fairness: 公平|透明性|バイアス
+    high_accuracy: ハルシネーション|正確性|100%|不正確|嘘
+    labor_law: 労働基準|労働時間
+
+    Args:
+        text (str): 変換する文字列
+
+    Returns:
+        list[str]: 制約のフラグ
+    """
+
     flags: list[str] = []
     if re.search(r"オンプレ|既存.+連携|リプレイス", text):
         flags.append("on_prem")
