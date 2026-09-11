@@ -2,7 +2,6 @@
 name = "dx-sol-suggest"
 version = "0.1.0"
 description = "Add your description here"
-readme = "README.md"
 authors = [
     { name = "Kou-Yamaguchi", email = "kou.tuos.infetc72@gmail.com" }
 ]
