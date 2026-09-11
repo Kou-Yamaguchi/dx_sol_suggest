@@ -51,6 +51,16 @@ from .tools.parse import (
 
 
 def _user_text(state: AgentState) -> str:
+    """
+    エージェントの状態からユーザー入力のテキストを取得する。
+
+    Args:
+        state (AgentState): エージェントの状態
+
+    Returns:
+        str: ユーザーから入力されたテキスト
+    """
+
     for message in reversed(state.messages):
         if isinstance(message, HumanMessage):
             content = message.content
@@ -65,10 +75,31 @@ def _user_text(state: AgentState) -> str:
 
 
 def _structured(schema):
+    """
+    スキーマに基づいて構造化されたデータを返すLLMクライアントを取得する。
+
+    Args:
+        schema (BaseModel): 構造化するデータのスキーマ
+
+    Returns:
+        BaseModel: スキーマに基づいて構造化されたデータを返すLLMクライアント
+    """
+
     return get_llm().with_structured_output(schema)
 
 
 def _invoke_structured(schema, system_prompt: str, user_content: str):
+    """
+    スキーマに基づいて構造化されたデータを返すLLMクライアントを呼び出す。
+
+    Args:
+        schema (BaseModel): 構造化するデータのスキーマ
+        system_prompt (str): システムプロンプト
+        user_content (str): ユーザーのコンテンツ
+    Returns:
+        BaseModel: スキーマに基づいて構造化されたデータ
+    """
+
     result = _structured(schema).invoke(
         [
             {"role": "system", "content": system_prompt},
@@ -81,6 +112,16 @@ def _invoke_structured(schema, system_prompt: str, user_content: str):
 
 
 def _unique_extend(existing: list[str], extra: list[str]) -> list[str]:
+    """
+    リストをユニークに拡張する。
+
+    Args:
+        existing (list[str]): 既存のリスト
+        extra (list[str]): 追加するリスト
+    Returns:
+        list[str]: ユニークに拡張されたリスト
+    """
+
     seen = set(existing)
     merged = list(existing)
     for item in extra:
@@ -91,13 +132,33 @@ def _unique_extend(existing: list[str], extra: list[str]) -> list[str]:
 
 
 def _dump(value) -> str:
+    """
+    データをJSON形式に変換する。
+
+    Args:
+        value (Any): 変換するデータ
+    Returns:
+        str: JSON形式のデータ
+    """
+
     if hasattr(value, "model_dump"):
         return json.dumps(value.model_dump(), ensure_ascii=False, indent=2)
     return json.dumps(value, ensure_ascii=False, indent=2, default=str)
 
 
+# TODO: 各ノードの詳細な動作説明をDocstringに記述
+
+
 def extract_issue_node(state: AgentState):
-    """課題を抽出するノード"""
+    """
+    課題を抽出するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 課題を抽出した結果
+    """
+
     user_text = _user_text(state)
     extracted: IssueExtraction = _invoke_structured(
         IssueExtraction, EXTRACT_ISSUE_PROMPT, user_text
@@ -124,7 +185,9 @@ def extract_issue_node(state: AgentState):
         missing = _unique_extend(missing, ["workload"])
         questions = _unique_extend(
             questions,
-            ["効果・ROIを試算するため、対象人数・頻度・1件あたり時間を教えてください。"],
+            [
+                "効果・ROIを試算するため、対象人数・頻度・1件あたり時間を教えてください。"
+            ],
         )
 
     return {
@@ -138,7 +201,15 @@ def extract_issue_node(state: AgentState):
 
 
 def extract_constraint_node(state: AgentState):
-    """制約を抽出するノード"""
+    """
+    制約を抽出するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 制約を抽出した結果
+    """
+
     extracted: ConstraintExtraction = _invoke_structured(
         ConstraintExtraction, EXTRACT_CONSTRAINT_PROMPT, _user_text(state)
     )
@@ -146,14 +217,16 @@ def extract_constraint_node(state: AgentState):
     constraints: list[Constraint] = []
     for raw in extracted.constraints:
         flags = _unique_extend(raw.flags, infer_constraint_flags(raw.text))
-        budget_text = raw.budget_text or (raw.text if raw.category == "budget" else None)
+        budget_text = raw.budget_text or (
+            raw.text if raw.category == "budget" else None
+        )
         duration_text = raw.duration_text or (
             raw.text if raw.category == "timeline" else None
         )
         amount, kind = parse_budget_jpy_impl(budget_text)
-        duration = parse_duration_months_impl(duration_text) or parse_duration_months_impl(
-            raw.text
-        )
+        duration = parse_duration_months_impl(
+            duration_text
+        ) or parse_duration_months_impl(raw.text)
         if amount is None:
             amount, kind = parse_budget_jpy_impl(raw.text)
         constraints.append(
@@ -195,7 +268,9 @@ def extract_constraint_node(state: AgentState):
     budget = BudgetInfo(
         initial_cap_jpy=min(initial_caps) if initial_caps else None,
         annual_cap_jpy=min(annual_caps) if annual_caps else None,
-        raw_text=" / ".join(item.text for item in constraints if item.category == "budget")
+        raw_text=" / ".join(
+            item.text for item in constraints if item.category == "budget"
+        )
         or None,
         is_unknown=not initial_caps and not annual_caps,
     )
@@ -210,7 +285,15 @@ def extract_constraint_node(state: AgentState):
 
 
 def assume_issue_node(state: AgentState):
-    """課題を推定するノード"""
+    """
+    課題を推定するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 課題を推定した結果
+    """
+
     situation = state.situation or ""
     questions = list(state.questions)
     assumptions = list(state.assumptions)
@@ -240,8 +323,7 @@ def assume_issue_node(state: AgentState):
     if not assumed.can_assume or not assumed.issues:
         questions = _unique_extend(
             questions,
-            assumed.questions
-            or ["解決したい課題（ボトルネック）を教えてください。"],
+            assumed.questions or ["解決したい課題（ボトルネック）を教えてください。"],
         )
         return {
             "issues": [],
@@ -257,8 +339,7 @@ def assume_issue_node(state: AgentState):
         "issues": issues,
         "questions": _unique_extend(
             questions,
-            assumed.questions
-            or ["この課題認識で合っているか確認させてください。"],
+            assumed.questions or ["この課題認識で合っているか確認させてください。"],
         ),
         "assumptions": _unique_extend(assumptions, assumed.assumptions),
         "should_propose": True,
@@ -266,6 +347,15 @@ def assume_issue_node(state: AgentState):
 
 
 def _constraint_flags(state: AgentState) -> list[str]:
+    """
+    制約のフラグを取得する。
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        list[str]: 制約のフラグ
+    """
+
     flags: list[str] = []
     for item in state.constraints:
         flags = _unique_extend(flags, item.flags)
@@ -273,12 +363,22 @@ def _constraint_flags(state: AgentState) -> list[str]:
 
 
 def _duration_months(state: AgentState) -> int | None:
-    months = [item.duration_months for item in state.constraints if item.duration_months]
+    months = [
+        item.duration_months for item in state.constraints if item.duration_months
+    ]
     return min(months) if months else None
 
 
 def plan_sol_node(state: AgentState):
-    """解決策を立案するノード"""
+    """
+    解決策を立案するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 解決策を立案した結果
+    """
+
     issue_texts = [item.text for item in state.issues]
     flags = _constraint_flags(state)
     budget_jpy = state.budget.initial_cap_jpy if state.budget else None
@@ -312,13 +412,25 @@ def plan_sol_node(state: AgentState):
 
 
 def check_constraint_node(state: AgentState):
-    """制約を遵守しているか確認するノード"""
-    violations = check_solution_against_constraints_impl(state.solution, state.constraints)
+    """
+    制約を遵守しているか確認するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 制約を遵守しているか確認した結果
+    """
+
+    violations = check_solution_against_constraints_impl(
+        state.solution, state.constraints
+    )
     qualitative_targets = [
         item
         for item in state.constraints
         if item.category in {"accuracy", "other", "personnel"}
-        or any(flag in item.flags for flag in ("fairness", "high_accuracy", "labor_law"))
+        or any(
+            flag in item.flags for flag in ("fairness", "high_accuracy", "labor_law")
+        )
     ]
     if qualitative_targets and state.solution is not None:
         qualitative: QualitativeConstraintCheck = _invoke_structured(
@@ -354,7 +466,15 @@ def check_constraint_node(state: AgentState):
 
 
 def calc_effect_node(state: AgentState):
-    """効果を試算するノード"""
+    """
+    効果を試算するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 効果を試算した結果
+    """
+
     plan: EffectPlan = _invoke_structured(
         EffectPlan,
         EFFECT_PROMPT,
@@ -398,7 +518,15 @@ def calc_effect_node(state: AgentState):
 
 
 def calc_cost_node(state: AgentState):
-    """コストを試算するノード"""
+    """
+    コストを試算するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: コストを試算した結果
+    """
+
     pattern_ids = state.solution.pattern_ids if state.solution else []
     scale = "macro" if state.scale_down_requested else "poc"
     catalog_costs = {
@@ -443,14 +571,26 @@ def calc_cost_node(state: AgentState):
 
 
 def check_within_budget_node(state: AgentState):
-    """予算内に収まっているか確認するノード"""
+    """
+    予算内に収まっているか確認するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 予算内に収まっているか確認した結果
+    """
+
     assumptions = list(state.assumptions)
     if state.budget is None or state.budget.is_unknown or state.cost is None:
         assumptions = _unique_extend(
             assumptions,
             ["予算不明のため、追加投資を抑えたスモールスタートを前提にしています。"],
         )
-        return {"budget_ok": True, "assumptions": assumptions, "scale_down_requested": False}
+        return {
+            "budget_ok": True,
+            "assumptions": assumptions,
+            "scale_down_requested": False,
+        }
 
     ok, reason = compare_to_budget_impl(
         state.cost.initial_total_jpy,
@@ -497,7 +637,15 @@ def check_within_budget_node(state: AgentState):
 
 
 def calc_roi_node(state: AgentState):
-    """費用対効果を試算するノード"""
+    """
+    費用対効果を試算するノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 費用対効果を試算した結果
+    """
+
     questions = list(state.questions)
     effect = state.effect
     cost = state.cost
@@ -510,7 +658,9 @@ def calc_roi_node(state: AgentState):
     ):
         questions = _unique_extend(
             questions,
-            ["ROIを算出するため、対象人数・頻度・1件あたり時間などの業務量を定量的に教えてください。"],
+            [
+                "ROIを算出するため、対象人数・頻度・1件あたり時間などの業務量を定量的に教えてください。"
+            ],
         )
         return {
             "roi": calc_roi_impl(None, None),
@@ -526,7 +676,15 @@ def calc_roi_node(state: AgentState):
 
 
 def summarize_node(state: AgentState):
-    """最終出力を得るノード"""
+    """
+    最終出力を得るノード
+
+    Args:
+        state (AgentState): エージェントの状態
+    Returns:
+        dict: 最終出力を得た結果
+    """
+
     payload = {
         "should_propose": state.should_propose,
         "department": state.department,
