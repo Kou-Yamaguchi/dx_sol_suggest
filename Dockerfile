@@ -6,6 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
+ENV PORT=8501
 
 WORKDIR /app
 
@@ -16,9 +17,9 @@ RUN uv sync --locked --no-dev --no-install-project
 # アプリ本体を追加する
 COPY README.md ./
 COPY src ./src
-COPY eval ./eval
+
 RUN uv sync --locked --no-dev
 
-EXPOSE 8501
+EXPOSE ${PORT}
 
-CMD ["uv", "run", "streamlit", "run", "src/dx_sol_suggest/main.py", "--server.address=0.0.0.0", "--server.port=8501"]
+CMD ["uv", "run", "streamlit", "run", "src/dx_sol_suggest/main.py", "--server.address=0.0.0.0", "--server.port=${PORT}"]
