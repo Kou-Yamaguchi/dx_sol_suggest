@@ -7,6 +7,17 @@ def check_solution_against_constraints_impl(
     solution: Solution | None,
     constraints: list[Constraint],
 ) -> list[ConstraintViolation]:
+    """
+    提案が定量・ルール制約に抵触していないかチェックする。
+
+    Args:
+        solution (Solution | None): 提案
+        constraints (list[Constraint]): 制約
+
+    Returns:
+        list[ConstraintViolation]: 制約違反リスト
+    """
+
     if solution is None:
         return [
             ConstraintViolation(
@@ -52,7 +63,8 @@ def check_solution_against_constraints_impl(
         for item in constraints
     )
     short_timeline = any(
-        item.duration_months is not None and item.duration_months <= 1 for item in constraints
+        item.duration_months is not None and item.duration_months <= 1
+        for item in constraints
     )
     simple_task = solution.complexity in {"ml", "custom"} and (
         tiny_budget or short_timeline
@@ -66,8 +78,10 @@ def check_solution_against_constraints_impl(
             )
         )
 
-    if "labor_law" in flags and solution.uses_generative_ai and "shift" in " ".join(
-        solution.pattern_ids
+    if (
+        "labor_law" in flags
+        and solution.uses_generative_ai
+        and "shift" in " ".join(solution.pattern_ids)
     ):
         violations.append(
             ConstraintViolation(
@@ -104,7 +118,9 @@ def check_solution_against_constraints(
     constraint_flags: str,
     constraint_texts: str,
 ) -> str:
-    """提案が定量・ルール制約に抵触していないか判定する。"""
+    """
+    提案が定量・ルール制約に抵触していないか判定する。
+    """
     solution = Solution(
         title="candidate",
         pattern_ids=[item for item in pattern_ids.split(",") if item],
@@ -117,7 +133,9 @@ def check_solution_against_constraints(
     constraints = [
         Constraint(
             text=constraint_texts,
-            flags=[flag.strip() for flag in constraint_flags.split(",") if flag.strip()],
+            flags=[
+                flag.strip() for flag in constraint_flags.split(",") if flag.strip()
+            ],
         )
     ]
     violations = check_solution_against_constraints_impl(solution, constraints)
