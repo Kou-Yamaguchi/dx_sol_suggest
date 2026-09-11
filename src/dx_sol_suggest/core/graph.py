@@ -17,24 +17,48 @@ from .state import AgentState
 
 
 def _route_after_extract_issue(state: AgentState) -> str:
+    """
+    課題抽出を試みた後の遷移先を決定する。
+        課題を抽出できない場合は仮説立案ノードへ遷移する。
+        課題を抽出できた場合は、制約抽出ノードへ遷移する。
+    """
+
     if not state.issues:
         return "assume_issue"
     return "extract_constraint"
 
 
 def _route_after_assume_issue(state: AgentState) -> str:
+    """
+    仮説立案を試みた後の遷移先を決定する。
+        仮説を立案できない場合は、要約ノードへ遷移する。
+        仮説を立案できた場合は、制約抽出ノードへ遷移する。
+    """
+
     if not state.issues:
         return "summarize"
     return "extract_constraint"
 
 
 def _route_after_check_constraint(state: AgentState) -> str:
+    """
+    制約チェックを試みた後の遷移先を決定する。
+        制約をチェックできない場合は、計画ノードへ遷移する。
+        制約をチェックできた場合は、計算ノードへ遷移する。
+    """
+
     if not state.constraints_ok:
         return "plan_sol"
     return "dispatch_calcs"
 
 
 def _route_after_budget(state: AgentState) -> str:
+    """
+    予算チェックを試みた後の遷移先を決定する。
+        予算をチェックできない場合は、計画ノードへ遷移する。
+        予算をチェックできた場合は、ROI計算ノードへ遷移する。
+    """
+
     if not state.budget_ok:
         return "plan_sol"
     return "calc_roi"
@@ -45,6 +69,15 @@ def _dispatch_calcs_node(_state: AgentState) -> dict:
 
 
 def suggest_agent(checkpointer: MemorySaver | None = None):
+    """
+    与えられた問題に対して、エージェントを提案する。
+    Args:
+        checkpointer (MemorySaver | None, optional): The checkpointer to use for the workflow. Defaults to None.
+
+    Returns:
+        Workflow: The workflow object.
+    """
+
     workflow = StateGraph(AgentState)
 
     workflow.add_node("extract_issue", extract_issue_node)
