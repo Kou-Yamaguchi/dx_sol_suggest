@@ -32,7 +32,10 @@ if prompt := st.chat_input("メッセージを入力してください"):
                     ]
                 }
             )
-            answer = str(result["messages"][-1].content)
+            last_message = result["messages"][-1]
+            answer = result.get("summary") or str(
+                getattr(last_message, "content", last_message)
+            )
             st.markdown(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
