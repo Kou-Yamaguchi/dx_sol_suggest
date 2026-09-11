@@ -53,6 +53,18 @@ TYPICAL_ISSUES: list[dict] = [
 
 
 def lookup_typical_issues(department: str | None, situation: str | None) -> list[str]:
+    """
+    部門・状況から典型的な課題を抽出する。
+    入力テキスト内容からkeywordベースで登録単語を検索
+    ヒットしたkeywordが最も多い課題を出力
+
+    Args:
+        department (str | None): 部門
+        situation (str | None): 状況
+
+    Returns:
+        list[str]: 典型的な課題リスト
+    """
     text = f"{department or ''} {situation or ''}"
     if not text.strip():
         return []
