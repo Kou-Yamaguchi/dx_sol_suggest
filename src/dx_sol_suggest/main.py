@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from uuid import uuid4
 
@@ -135,6 +136,12 @@ def _render_sidebar() -> None:
 load_dotenv()
 
 st.set_page_config(page_title="AI Agent", page_icon="🤖")
+
+password = st.text_input("パスワード", type="password")
+
+if password != os.getenv("APP_PASSWORD"):
+    st.stop()
+
 _ensure_session()
 _render_sidebar()
 
