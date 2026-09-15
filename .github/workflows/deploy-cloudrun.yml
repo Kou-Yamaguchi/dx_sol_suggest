@@ -35,7 +35,7 @@ concurrency:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: ${{ secrets.GCP_REGION || 'asia-northeast1' }}
-  REPOSITORY: dx-sol-suggest
+  REPOSITORY: ${{ secrets.REPOSITORY }}
   SERVICE: dx-sol-suggest
 
 jobs:
