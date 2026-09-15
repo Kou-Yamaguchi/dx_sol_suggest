@@ -34,6 +34,8 @@ concurrency:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  WIF_PROVIDER: ${{ secrets.GCP_WIF_PROVIDER }}
+  SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
   REGION: ${{ secrets.GCP_REGION || 'asia-northeast1' }}
   REPOSITORY: ${{ secrets.REPOSITORY }}
   SERVICE: dx-sol-suggest
@@ -43,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
 
     steps:
       - name: Checkout
@@ -52,7 +55,9 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v3
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${PROJECT_ID}
+          workload_identity_provider: ${WIF_PROVIDER}
+          service_account: ${SERVICE_ACCOUNT}
           token_format: access_token
 
       - name: Set image name
