@@ -1,0 +1,114 @@
+# main への push（マージ含む）で Docker イメージを Artifact Registry に push し、Cloud Run へデプロイする。
+#
+# 事前準備:
+# 1. GCP で Cloud Run / Artifact Registry / IAM Credentials API を有効化する
+# 2. Artifact Registry の Docker リポジトリを作成する
+#    gcloud artifacts repositories create dx-sol-suggest \
+#      --repository-format=docker --location=asia-northeast1
+# 3. GitHub Actions 用サービスアカウントを作成し、次のロールを付与する
+#    - roles/run.admin
+#    - roles/artifactregistry.writer
+#    - roles/iam.serviceAccountUser
+# 4. Cloud Run のランタイムサービスアカウントに Secret Manager へのアクセスを付与する
+#    - roles/secretmanager.secretAccessor
+# 5. Secret Manager に次のシークレットを作成する（名前は環境変数名と一致させる）
+#    - OPENAI_API_KEY
+#    - OPENAI_MODEL
+#    - APP_PASSWORD
+#
+# 必要な GitHub Secrets:
+#   GCP_PROJECT_ID         GCP プロジェクト ID
+#   GCP_WIF_PROVIDER       Workload Identity Provider のフル名
+#   GCP_SERVICE_ACCOUNT    デプロイ用サービスアカウントのメール
+#   REPOSITORY             リポジトリ名
+#
+# 任意の GitHub Secrets:
+#   GCP_REGION             デフォルト: asia-northeast1
+
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-cloudrun-production
+  cancel-in-progress: true
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  WIF_PROVIDER: ${{ secrets.GCP_WIF_PROVIDER }}
+  SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+  REGION: ${{ secrets.GCP_REGION || 'asia-northeast1' }}
+  REPOSITORY: ${{ secrets.REPOSITORY }}
+  SERVICE: dx-sol-suggest
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${PROJECT_ID}
+          workload_identity_provider: ${WIF_PROVIDER}
+          service_account: ${SERVICE_ACCOUNT}
+          token_format: access_token
+
+      - name: Set image name
+        id: image
+        run: echo "name=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${SERVICE}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Sign in to Artifact Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGION }}-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Build and push container
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.image.outputs.name }}:${{ github.sha }}
+            ${{ steps.image.outputs.name }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ steps.image.outputs.name }}:${{ github.sha }}
+          secrets: |-
+            OPENAI_API_KEY=OPENAI_API_KEY:latest
+            APP_PASSWORD=APP_PASSWORD:latest
+          secrets_update_strategy: overwrite
+          timeout: 300s
+          flags: >-
+            --allow-unauthenticated
+            --port=8080
+            --memory=1Gi
+            --cpu=1
+            --min-instances=0
+            --max-instances=3
+
+      - name: Show service URL
+        run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
