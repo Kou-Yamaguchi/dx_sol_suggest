@@ -96,11 +96,8 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ steps.image.outputs.name }}:${{ github.sha }}
-          env_vars: '{}'
-          env_vars_update_strategy: overwrite
           secrets: |-
             OPENAI_API_KEY=OPENAI_API_KEY:latest
-            OPENAI_MODEL=OPENAI_MODEL:latest
             APP_PASSWORD=APP_PASSWORD:latest
           secrets_update_strategy: overwrite
           timeout: 300s
