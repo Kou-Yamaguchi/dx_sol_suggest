@@ -20,6 +20,7 @@
 #   GCP_PROJECT_ID         GCP プロジェクト ID
 #   GCP_WIF_PROVIDER       Workload Identity Provider のフル名
 #   GCP_SERVICE_ACCOUNT    デプロイ用サービスアカウントのメール
+#   REPOSITORY             リポジトリ名
 #
 # 任意の GitHub Secrets:
 #   GCP_REGION             デフォルト: asia-northeast1
