@@ -164,7 +164,7 @@ END
 | LLM | OpenAI API（実行時は `OPENAI_MODEL`、評価時は GPT-4o） |
 | スキーマ / 状態 | Pydantic |
 | UI | Streamlit |
-| 評価 | RAGAS, Hugging Face datasets, pandas |
+| 評価 | RAGAS, pandas |
 | コンテナ | Docker, docker compose |
 | CI / CD | GitHub Actions |
 | インフラ | Google Cloud Run, Artifact Registry, Secret Manager, Workload Identity Federation |
@@ -173,21 +173,18 @@ END
 
 ## 完成までの工数
 
-> 以下はフォーマット用の一例です。実工数に合わせて書き換えてください。
-
-| フェーズ | 期間（例） | 主な作業（例） |
+| フェーズ | 期間 | 主な作業 |
 | --- | --- | --- |
-| 課題設定・要件整理 | 1 週 | 対象業務の整理、提案に必要な入出力の定義 |
-| データセット作成 | 1.5 週 | ベースケース作成、欠落パターン・期待振る舞いの設計 |
-| Graph / エージェント実装 | 2.5 週 | ノード分割、制約チェック、再計画、ROI 試算 |
-| 評価パイプライン | 1 週 | RAGAS 指標設計、Judge プロンプト、結果集計 |
-| UI | 0.5 週 | Streamlit のチャット・履歴・パスワード保護 |
-| デプロイ | 1 週 | Docker 化、Cloud Run、GitHub Actions、Secret 連携 |
-| 改善・調整 | 1 週 | プロンプト、カタログ、評価結果に基づく修正 |
+| 課題設定・要件整理 | 1 日 | 対象業務の整理、提案に必要な入出力の定義 |
+| データセット作成 | 5 日 | ベースケース作成、欠落パターン・期待振る舞いの設計 |
+| 評価パイプライン | 3 日 | RAGAS 指標設計、Judge プロンプト、結果集計 |
+| Graph / エージェント実装 | 3 日 | ノード分割、制約チェック、再計画、ROI 試算 |
+| UI | 1 日 | Streamlit のチャット・履歴・パスワード保護 |
+| デプロイ | 2 日 | Docker 化、Cloud Run、GitHub Actions、Secret 連携 |
 
-- 合計（例）: 約 8〜9 週間 / 個人開発（業務外）
-- うち実装本体（例）: 約 80〜100 時間
-- うち評価・データ作成（例）: 約 30〜40 時間
+- 合計: 15日 / 個人開発
+- うち実装本体: 約 32 時間
+- うち評価・データ作成（例）: 約 64 時間
 
 ---
 
